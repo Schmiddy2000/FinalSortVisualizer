@@ -6,9 +6,13 @@
 #include "../SwiftifySFML/Screen.h"
 #include "../SwiftifySFML/Enumerations.h"
 
+#include "Settings/Settings.h"
+
 #include "Screens/StartScreen.cpp"
 
 int main() {
+    Settings settings;
+
     sf::RenderWindow window(sf::VideoMode(800, 600), "UI Demo");
     window.setFramerateLimit(10);
 
@@ -22,7 +26,8 @@ int main() {
     auto otherScreen = std::make_shared<sw::Screen>("SecondScreen", window);
 
     sw::Container myContainer("Container1", sf::Vector2f(0.5, 0.5));
-    myContainer.setBackground(sf::Color::Magenta);
+    // myContainer.setBackground(sf::Color::Magenta);
+    myContainer.setBackground(ColorSpace::buttonBackground);
 
     // Capture myScreen using a shared_ptr in the lambda
     myContainer.setCallback([myScreen]() {
