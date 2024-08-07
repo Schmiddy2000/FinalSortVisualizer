@@ -4,6 +4,7 @@
 #include "../SwiftifySFML/Container.h"
 #include "../SwiftifySFML/Application.h"
 #include "../SwiftifySFML/Screen.h"
+#include "../SwiftifySFML/Enumerations.h"
 
 #include "Screens/StartScreen.cpp"
 
@@ -15,6 +16,8 @@ int main() {
 
     auto myScreen = std::make_shared<StartScreen>("StartScreen", window);
     myScreen->setBackground(sf::Color::Blue);
+    myScreen->setLayoutOrientation(sw::LayoutOrientation::Vertical);
+    myScreen->setSpacingProportions(sf::Vector2f(0, 0.05));
 
     auto otherScreen = std::make_shared<sw::Screen>("SecondScreen", window);
 
@@ -27,14 +30,17 @@ int main() {
         myScreen->transitionToSecondScreen();
     });
 
+    sw::Container mySecondContainer("Container2", sf::Vector2f(0.35, 0.2));
+
     myScreen->addContainer(std::make_unique<sw::Container>(std::move(myContainer)));
+    myScreen->addContainer(std::make_unique<sw::Container>(std::move(mySecondContainer)));
 
     sw::Container buttonContainer("MyButton", sf::Vector2f(0.4, 0.2));
     buttonContainer.setBackground(sf::Color::Red);
 
     // Add the screen to the application
-    myApp->addScreen(myScreen);
-    myApp->addScreen(otherScreen);
+    myApp->addScreen(std::move(myScreen));
+    myApp->addScreen(std::move(otherScreen));
 
     myApp->run();
 

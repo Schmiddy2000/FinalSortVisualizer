@@ -406,18 +406,28 @@ namespace sw {
 // - The most specific element should be triggered. Use a flag to indicate if an event has been handled
 // ___________________________________________________________________________
     bool Container::handleEvent(sf::Event &event) {
+        // Flag to indicate to the parent container if the event still might need to be handled
         bool hasBeenHandled = false;
-        // Loop over all other elements and call their handleEvent functions
-        for (auto &element: elements_) {
-            hasBeenHandled = std::visit([&event](auto &el) -> bool { return el->handleEvent(event); }, element);
 
-            // Exit the loop if the
-            if (hasBeenHandled) break;
-        }
-        // If any of them returns true, indicating that the event has been handled on a lower level, handle the own
-        // container event if applicable
-        if (not hasBeenHandled and callback_) {
-            callback_();
+        // Check the type of event and location in case of a mouse event. If not, return hasBeenHandled
+        if (event.type == sf::Event::MouseButtonPressed) {
+            sf::Vector2f mousePos(event.mouseButton.x, event.mouseButton.y);
+            if (containsPosition(mousePos)) {
+                // Handle event
+
+                // Loop over all other elements and call their handleEvent functions
+                for (auto &element: elements_) {
+                    hasBeenHandled = std::visit([&event](auto &el) -> bool { return el->handleEvent(event); }, element);
+
+                    // Exit the loop if the
+                    if (hasBeenHandled) break;
+                }
+                // If any of them returns true, indicating that the event has been handled on a lower level, handle the own
+                // container event if applicable
+                if (not hasBeenHandled and callback_) {
+                    callback_();
+                }
+            }
         }
 
         // Return this container's handle status
@@ -871,4 +881,11 @@ namespace sw {
         needRenderUpdate_ = false;
     }
 
+    bool Container::containsPosition(sf::Vector2f position) {
+        if (position.x > position_.x and position.x < position_.x + size_.x and position.y > position_.y and position.y < position_.y + size_.y) {
+            return true;
+        }
+
+        return false;
+    }
 }

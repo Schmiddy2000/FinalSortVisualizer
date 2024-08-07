@@ -34,7 +34,7 @@ namespace sw {
         virtual void transitionToScreen(const std::string &name);
 
         // Add a new screen
-        virtual void addScreen(std::unique_ptr <Screen> screen);
+        virtual void addScreen(std::shared_ptr<Screen> screen);
 
         // Remove a screen (is this necessary?)
         virtual void removeScreen(const std::string &name);
@@ -53,10 +53,10 @@ namespace sw {
         sf::RenderWindow &window_;
 
         // Store the screens in the application
-        std::vector <std::unique_ptr<Screen>> screens_;
+        std::vector <std::shared_ptr<Screen>> screens_;
 
         // Pointer to the current screen pointer
-        std::unique_ptr <Screen> *currentScreen_;
+        std::shared_ptr<Screen> *currentScreen_;
     };
 
 }

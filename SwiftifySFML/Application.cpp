@@ -57,7 +57,7 @@ namespace sw {
         }
     }
 
-    void Application::addScreen(std::unique_ptr<Screen> screen) {
+    void Application::addScreen(std::shared_ptr<Screen> screen) {
         // Add the screen to screens. Raise an error if a screen with that name already exists
         std::string name = screen->getName();
         int checkStatus = checkIfNameExists(name);
