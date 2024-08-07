@@ -23,6 +23,8 @@ add_executable(FinalSortVisualizer
         Datasets/Dataset.cpp
         Settings/Settings.h
         Settings/Settings.cpp
+        # MainApplication/MainApplication.cpp
+        # MainApplication/MainApplication.h
 )
 
 target_link_libraries(FinalSortVisualizer sfml-system sfml-window sfml-graphics)

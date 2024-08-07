@@ -7,8 +7,8 @@
 #include "../SwiftifySFML/Enumerations.h"
 
 #include "Settings/Settings.h"
-
 #include "Screens/StartScreen.cpp"
+#include "MainApplication/MainApplication.h"
 
 int main() {
     Settings settings;

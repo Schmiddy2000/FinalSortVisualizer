@@ -5,6 +5,7 @@
 #ifndef FINALSORTVISUALIZER_SETTINGS_H
 #define FINALSORTVISUALIZER_SETTINGS_H
 
+//#include "../MainApplication/MainApplication.cpp"
 #include "../SwiftifySFML/Enumerations.h"
 #include "../SwiftifySFML/Application.h"
 
