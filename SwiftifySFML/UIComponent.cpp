@@ -8,7 +8,7 @@
 
 namespace sw {
 
-    UIComponent::UIComponent(std::string name, const sf::Vector2f &sizeProportions)
+    UIComponent::UIComponent(std::string name, const sf::Vector2f sizeProportions)
             : name_(std::move(name)), sizeProportions_(sizeProportions) {
         // Assign default values
         needRenderUpdate_ = true;
@@ -83,6 +83,22 @@ namespace sw {
 
     const sf::Vector2f &UIComponent::getSize() const {
         return size_;
+    }
+
+    void UIComponent::setForegroundColor(sf::Color color) {
+        foregroundColor_ = color;
+    }
+
+    void UIComponent::setBackgroundColor(sf::Color color) {
+        backgroundColor_ = color;
+    }
+
+    const sf::Color &UIComponent::getForegroundColor() const {
+        return foregroundColor_;
+    }
+
+    const sf::Color &UIComponent::getBackgroundColor() const {
+        return backgroundColor_;
     }
 
 }

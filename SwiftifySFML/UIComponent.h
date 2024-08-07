@@ -10,7 +10,7 @@ namespace sw {
     class UIComponent {
     public:
         // Constructor and destructor
-        UIComponent(std::string name, const sf::Vector2f &sizeProportions);
+        UIComponent(std::string name, const sf::Vector2f sizeProportions);
 
         virtual ~UIComponent() = default;
 
@@ -18,8 +18,10 @@ namespace sw {
 
         // Accessibility
         void setVisible(bool visible);
-
         void setEnabled(bool enabled);
+
+        void setForegroundColor(sf::Color color);
+        void setBackgroundColor(sf::Color color);
 
         void setCallback(std::function<void()> callback);
 
@@ -36,15 +38,14 @@ namespace sw {
 
         // Get visibility and responsiveness flags
         [[nodiscard]] bool isVisible() const;
-
         [[nodiscard]] bool isEnabled() const;
 
         // Get internal properties, only as const references
         [[nodiscard]] const std::string &getName() const;
-
         [[nodiscard]] const sf::Vector2f &getPosition() const;
-
         [[nodiscard]] const sf::Vector2f &getSize() const;
+        [[nodiscard]] const sf::Color &getForegroundColor() const;
+        [[nodiscard]] const sf::Color &getBackgroundColor() const;
 
         // UI-related functions
 
@@ -55,7 +56,7 @@ namespace sw {
         virtual bool handleEvent(const sf::Event &event) = 0;
 
         // Update the render information for the UI component
-        virtual void updateRenderInformation() = 0;
+        virtual void computeRenderInformation() = 0;
 
     protected:
         // Flag indicating if the render information needs to be updated. Only set internally.
@@ -64,6 +65,10 @@ namespace sw {
         // Flags indicating visibility and responsiveness
         bool isVisible_;
         bool isEnabled_;
+
+        // Colors for front and background
+        sf::Color foregroundColor_;
+        sf::Color backgroundColor_;
 
         // Name for identification. Probably only used in events and interactions. Set in the constructor and can only be
         // gotten afterward.

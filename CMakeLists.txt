@@ -23,6 +23,8 @@ add_executable(FinalSortVisualizer
         Datasets/Dataset.cpp
         Settings/Settings.h
         Settings/Settings.cpp
+        UIComponents/UIComponents.h
+        UIComponents/UIComponents.cpp
         # MainApplication/MainApplication.cpp
         # MainApplication/MainApplication.h
 )
