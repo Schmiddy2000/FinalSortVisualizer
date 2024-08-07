@@ -19,6 +19,8 @@ add_executable(FinalSortVisualizer
         SwiftifySFML/UIComponent.h
         SwiftifySFML/UIComponent.cpp
         Screens/StartScreen.cpp
+        Datasets/Dataset.h
+        Datasets/Dataset.cpp
 )
 
 target_link_libraries(FinalSortVisualizer sfml-system sfml-window sfml-graphics)
