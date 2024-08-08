@@ -25,6 +25,8 @@ add_executable(FinalSortVisualizer
         Settings/Settings.cpp
         UIComponents/UIComponents.h
         UIComponents/UIComponents.cpp
+        Sorter/Sorter.h
+        Sorter/Sorter.cpp
         # MainApplication/MainApplication.cpp
         # MainApplication/MainApplication.h
 )
