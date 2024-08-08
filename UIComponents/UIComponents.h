@@ -170,7 +170,7 @@ private:
     std::string content_;
 
     // Container to store and align the text lines
-    sw::Container container_;
+    // sw::Container container_;
 };
 
 
@@ -207,21 +207,6 @@ private:
     // Think about the types (not that important though). Either do static_casts or template this. No templating
     // needed, since diversity and size are ints, right?
     int minValue_;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     int maxValue_;
     int currentValue_;
 
@@ -234,6 +219,172 @@ private:
     sf::Text minValueText_;
     sf::Text maxValueText_;
     sf::Text currentValueText_;
+};
+
+
+/*
+ * DatasetVisualizer class. Visualizes the normalized data from a Dataset instance using bars of
+ * variable height. Should feature some subsection selection mechanism (only used in the generation process).
+ *
+ * Ideas for subsection selection mechanisms:
+ * 1) Use the normalized data bars
+ * 2) Display an additional set of bars (same height, 5-10 % of the UI element) with the sole purpose
+ * of handling the input. Maybe this could also be a horizontal bar if clicks aren't always recognized
+ * (for many bars, due to the gaps between them...)
+ * --> These could either work with click or drag input (or both...)
+ *
+ * --- Updated after writing SwiftifySFML ---
+ * Thoughts on the layout:
+ * - Place all components inside a container
+ *
+ * Thoughts on the data / attributes needed:
+ * -
+ *
+ * Thought on the interactions:
+ * -
+ *
+ * Additional thoughts:
+ * - Use this in combination with another visualizer that handles the subsection selection when creating datasets
+ * and don't add the additional functionality for that here.
+ * - Can this simply use a pointer to the normalized data in the Dataset class instance? Or should the
+ * SortingVisualizer contain all the information? Or can it even just be gotten from the Dataset class instance,
+ * maybe by setting the data public?
+ */
+class DatasetVisualizer: public sw::UIComponent {
+public:
+    // Constructor. Should have a bool subsectionSelection determining if this feature should be displayed / enabled.
+    DatasetVisualizer(std::string name, sf::Vector2f sizeProportions);
+    ~DatasetVisualizer() = default;
+
+    // ...
+    void draw(sf::RenderWindow& window) override;
+    bool handleEvent(const sf::Event& event) override;
+    void computeRenderInformation() override;
+
+private:
+    // Should either have a ref / pointer to the dataset instance and set the subsection indices itself, or the
+    // sort / shuffle functions should be extended to take indices as parameters and then be called...
+    // Since we need to manage first clicks where we can't know if it is the start or stop index, having these
+    // parameters here might be better...
+    // --> Have to update the parameters (and inner workings) of the sort and shuffle functions
+    size_t subsectionStart_;
+    size_t subsectionStop_;
+
+    // Technically, we only need (a pointer to) the normalized data (plus maybe the section indices). But my gut
+    // tells me that we'll probably need more information at some point, so having access to a sorter instance
+    // (that will contain a dataset instance) is a better choice...
+    // Then we would have to use a templated variable though. For that, I would have to use std::variant. If I use
+    // variant, can or do I have to use unique pointers then? Because this might be a problem due to unique
+    // ownership...
+    // ...
+};
+
+
+/*
+ * StatisticsVisualizer class. Shows the result of the tracking components of the sorter class. Might also have
+ * buttons and sliders to set up the benchmark parameters to run benchmark tests there (would then also show the
+ * benchmark results there...)
+ *
+ * --- Updated after writing SwiftifySFML ---
+ * Thoughts on the layout:
+ * - Place all components inside a container
+ *
+ * Thoughts on the data / attributes needed:
+ * -
+ *
+ * Thought on the interactions:
+ * -
+ */
+class StatisticsVisualizer: public sw::UIComponent {
+public:
+    // Constructor and destructor
+
+    // Definition of purely virtual functions
+    void draw(sf::RenderWindow& window) override;
+    bool handleEvent(const sf::Event& event) override;
+    void computeRenderInformation() override;
+
+private:
+    // Variables and potentially internal functions
+};
+
+
+/*
+ * PlotVisualizer class. Shows the history of the tracking components of the sorter class (component-wise) as
+ * a (line?) plot (probably scatter but after a few steps should look like a line). This will very likely just
+ * plot the accumulated values of the tracking components against the sorting steps. Maybe we will also add a
+ * plot that shows the values for each step, but this will break once we have more steps than pixels in the
+ * UI element (width-wise)...
+ */
+class PlotVisualizer: public sw::UIComponent {
+public:
+    // Constructor and destructor
+
+    // Definition of purely virtual functions
+    void draw(sf::RenderWindow& window) override;
+    bool handleEvent(const sf::Event& event) override;
+    void computeRenderInformation() override;
+
+private:
+    // Variables and potentially internal functions
+};
+
+
+/*
+ * SortingVisualizer.
+ *
+ * Maybe we would like to create a sortingVisualizer that has a DatasetVisualizer, a StatisticsVisualizer and
+ * a PlotVisualizer. This component could then kind of function as a small screen. Here we could then have 3 buttons
+ * at the top of the UI element that lets the user choose which type of information (visualizer) he would like to have
+ * displayed right now...
+ * (Additionally, we could also add a TextField (or event dedicated informationVisualizer) that would tell the user
+ * something about the specific sorting algorithm)
+ *
+ * This component could also handle the event handling and logic (what to currently display) on its own, increasing
+ * modularity. Else, this has to be done by the screen class instance...
+ *
+ * --> Then we would also only need one sorter and dataset instance for all three UI elements and would not need to
+ * copy / move these instances.
+ *
+ * --- Updated after writing SwiftifySFML ---
+ * Thoughts on the layout:
+ * - Place all components inside a container
+ *
+ * Thoughts on the data / attributes needed:
+ * -
+ *
+ * Thought on the interactions:
+ * -
+ */
+class SortingVisualizer: public sw::UIComponent {
+public:
+    // Constructor.
+
+    // Functions to switch to the different components (will probably update the corresponding render information
+    // (if needed)). They will also probably update the value of a variable storing the case of the current screen
+    // in an enum. Then I can use a switch to show the requested content.
+
+    // Render function should contain the switch (and then call the render function of the wanted class instance)
+
+    // Update render information should call the selected class instances update render information function
+
+    // Handle event function should handle different information component selection or pass down the event
+    // information (is there a case for this ???)
+
+private:
+    // Local enum (maybe placeholder but maybe enough...) + maybe add 'Information'
+    enum class ActiveVisualizer { Dataset, Statistics, Plot };
+    // Variable to store the Visualizer to currently display
+    ActiveVisualizer activeVisualizer_;
+
+    // Visualizer instances (will they be passed or created here? --> Probably here)
+    // Currently commented out since the classes still have undefined virtual functions
+//    DatasetVisualizer datasetVisualizer_;
+//    StatisticsVisualizer statisticsVisualizer_;
+//    PlotVisualizer plotVisualizer_;
+
+    // Sorter instance pointer
+    // Sorter* sorter_
 };
 
 #endif //FINALSORTVISUALIZER_UICOMPONENTS_H

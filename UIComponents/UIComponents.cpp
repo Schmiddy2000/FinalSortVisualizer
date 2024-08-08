@@ -119,12 +119,8 @@ void Text::computeRenderInformation() {
     text_.setCharacterSize(fontSize_);
     text_.setString(content_);
     text_.setFillColor(ColorSpace::textForeground);
+    text_.setFont(bold_ ? Settings::boldFont : Settings::font);
 
-    if (bold_) {
-        text_.setFont(Settings::boldFont);
-    } else {
-        text_.setFont(Settings::font);
-    }
 
     // Reset render update flag
     needRenderUpdate_ = false;
