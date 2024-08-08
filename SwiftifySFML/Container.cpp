@@ -300,6 +300,9 @@ namespace sw {
 // Could also make these functions templated.
 // ___________________________________________________________________________
     void Container::addContainer(std::unique_ptr<Container> container) {
+        // Set the parentSize
+        container->setParentSize(size_);
+
         // Using emplace_back and std::move to construct the container at the end of elements_
         elements_.emplace_back(std::move(container));
 
@@ -309,6 +312,9 @@ namespace sw {
 
 // ___________________________________________________________________________
     void Container::addUIComponent(std::unique_ptr<UIComponent> component) {
+        // Set the parentSize
+        component->setParentSize(size_);
+
         // Using emplace_back and std::move to construct the container at the end of elements_
         elements_.emplace_back(std::move(component));
 

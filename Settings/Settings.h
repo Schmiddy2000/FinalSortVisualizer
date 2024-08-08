@@ -84,7 +84,7 @@ public:
     static void initialize() {
         buttonForeground = sf::Color::Black;
         buttonBackground = sf::Color::Green;
-        textForeground = sf::Color::Black;
+        textForeground = sf::Color::Red;
         textBackground = sf::Color::White;
 
         screenBackground = sf::Color::White;
@@ -96,7 +96,7 @@ class DarkModeColors : public ColorSpace {
 public:
     static void initialize() {
         buttonForeground = sf::Color::White;
-        buttonBackground = sf::Color::Magenta;
+        buttonBackground = sf::Color::Black;
         textForeground = sf::Color::White;
         textBackground = sf::Color::Black;
 

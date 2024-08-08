@@ -4,11 +4,13 @@
 
 #include <SFML/Graphics.hpp>
 #include "UIComponent.h"
+
 #include <string>
+#include <iostream>
 
 namespace sw {
 
-    UIComponent::UIComponent(std::string name, const sf::Vector2f sizeProportions)
+    UIComponent::UIComponent(std::string name, sf::Vector2f sizeProportions)
             : name_(std::move(name)), sizeProportions_(sizeProportions) {
         // Assign default values
         needRenderUpdate_ = true;
@@ -16,6 +18,56 @@ namespace sw {
 
         // Should this be true or false? And should this be renamed to isDisabled?
         isEnabled_ = true;
+    }
+
+    // Move constructor
+    UIComponent::UIComponent(UIComponent&& other) noexcept
+            : needRenderUpdate_(other.needRenderUpdate_),
+              isVisible_(other.isVisible_),
+              isEnabled_(other.isEnabled_),
+              foregroundColor_(std::move(other.foregroundColor_)),
+              backgroundColor_(std::move(other.backgroundColor_)),
+              name_(std::move(other.name_)),
+              parentSize_(other.parentSize_),
+              sizeProportions_(other.sizeProportions_),
+              position_(other.position_),
+              size_(other.size_),
+              callback_(std::move(other.callback_)) {
+        // Reset the other instance to a valid state
+        other.needRenderUpdate_ = false;
+        other.isVisible_ = true;
+        other.isEnabled_ = true;
+        other.parentSize_ = sf::Vector2f(0, 0);
+        other.sizeProportions_ = sf::Vector2f(0, 0);
+        other.position_ = sf::Vector2f(0, 0);
+        other.size_ = sf::Vector2f(0, 0);
+    }
+
+    // Move assignment operator
+    UIComponent& UIComponent::operator=(UIComponent&& other) noexcept {
+        if (this != &other) {
+            needRenderUpdate_ = other.needRenderUpdate_;
+            isVisible_ = other.isVisible_;
+            isEnabled_ = other.isEnabled_;
+            foregroundColor_ = std::move(other.foregroundColor_);
+            backgroundColor_ = std::move(other.backgroundColor_);
+            name_ = std::move(other.name_);
+            parentSize_ = other.parentSize_;
+            sizeProportions_ = other.sizeProportions_;
+            position_ = other.position_;
+            size_ = other.size_;
+            callback_ = std::move(other.callback_);
+
+            // Reset the other instance to a valid state
+            other.needRenderUpdate_ = false;
+            other.isVisible_ = true;
+            other.isEnabled_ = true;
+            other.parentSize_ = sf::Vector2f(0, 0);
+            other.sizeProportions_ = sf::Vector2f(0, 0);
+            other.position_ = sf::Vector2f(0, 0);
+            other.size_ = sf::Vector2f(0, 0);
+        }
+        return *this;
     }
 
     void UIComponent::setVisible(bool visible) {
@@ -35,6 +87,7 @@ namespace sw {
 
     void UIComponent::setParentSize(sf::Vector2f parentSize) {
         parentSize_ = parentSize;
+        computeSize();
 
         // Update render update flag
         needRenderUpdate_ = true;
@@ -42,6 +95,7 @@ namespace sw {
 
     void UIComponent::setSizeProportions(sf::Vector2f sizeProportions) {
         sizeProportions_ = sizeProportions;
+        computeSize();
 
         // Update render update flag
         needRenderUpdate_ = true;
@@ -108,5 +162,18 @@ namespace sw {
         }
 
         return false;
+    }
+
+    void UIComponent::computeSize() {
+        // Compute the actual size. Needs parentSize to be set already.
+        size_.x = sizeProportions_.x * parentSize_.x;
+        size_.y = sizeProportions_.y * parentSize_.y;
+
+        std::cout << "Did compute size:" << size_.x << ", " << size_.y << std::endl;
+
+//        // Update the parentSize of all child elements
+//        for (auto &element: elements_) {
+//            std::visit([this](auto &el) { el->setParentSize(size_); }, element);
+//        }
     }
 }

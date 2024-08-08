@@ -103,9 +103,7 @@ namespace sw {
 
         // Functions to compute the internal dimensions from the parent's dimensions and proportions
         void computeSize();
-
         void computePadding();
-
         void computeSpacing();
 
         // Checks the container content. Provides user feedback in the case of errors or inconsistencies.

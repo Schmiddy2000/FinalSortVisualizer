@@ -3,14 +3,18 @@
 //
 #include "UIComponents.h"
 #include "../Settings/Settings.h"
+
 #include <string>
+#include <sstream>
 #include <SFML/Graphics.hpp>
 
 // --- Button ---
 
 // ___________________________________________________________________________
 Button::Button(std::string name, sf::Vector2f sizeProportions, std::string label)
-: sw::UIComponent(std::move(name), sizeProportions), label_(std::move(label)) {}
+: sw::UIComponent(std::move(name), sizeProportions), label_(std::move(label)) {
+    needRenderUpdate_ = true;
+}
 
 
 // ___________________________________________________________________________
@@ -117,6 +121,7 @@ void Text::computeRenderInformation() {
     // Set up the text properties
     text_.setPosition(position_);
     text_.setCharacterSize(fontSize_);
+    std::string tester("Hallo...");
     text_.setString(content_);
     text_.setFillColor(ColorSpace::textForeground);
     text_.setFont(bold_ ? Settings::boldFont : Settings::font);
@@ -152,7 +157,7 @@ void Text::setContent(const std::string &content) {
 
 // ___________________________________________________________________________
 TextField::TextField(std::string name, sf::Vector2f sizeProportions, std::string content)
-        : UIComponent(std::move(name), sizeProportions) {
+        : UIComponent(std::move(name), sizeProportions), container_("TextFieldRoot", sizeProportions) {
     content_ = std::move(content);
 
     // Set default values
@@ -164,9 +169,46 @@ TextField::TextField(std::string name, sf::Vector2f sizeProportions, std::string
     needRenderUpdate_ = true;
 }
 
+std::vector<std::string> TextField::splitString(const std::string &string, char delimiter) {
+    // Create the vector to store the words
+    std::vector<std::string> words;
+
+    // Create the variable to store the current word
+    std::string word;
+
+    // Convert string to string stream to make use of std::getline.
+    std::stringstream stringStream(string);
+
+    // Add word to words
+    while(std::getline(stringStream, word, delimiter)) {
+        words.push_back(word);
+    }
+
+    return words;
+}
+
 // ___________________________________________________________________________
 float TextField::contentToTextLines() {
-    return 0;
+    // Split the content string by space characters and check for every word, after appending it to the string
+    // for the current line, if it exceeds size.x. If that's the case, create a textLine with the text that fits.
+
+    // Variable to store the text for the current line.
+    std::string currentString;
+
+    // Create an instance of sf::Text to get the UI bound widths. Should / can this be outsourced to the
+    // getRenderInstructions functions?
+    sf::Text lineText;
+    // Set the rest of the properties here as well
+    lineText.setFont(bold_ ? Settings::boldFont : Settings::font);
+    lineText.setCharacterSize(fontSize_);
+    lineText.setFillColor(ColorSpace::textForeground);
+
+    // Get the height for a new line character. Used to calculate the height of the supposed text box
+    lineText.setString("\n");
+    float newLineHeight = lineText.getLocalBounds().height;
+
+    // Now split the content
+    std::vector<std::string> splitContent = std::move(splitString(content_, ' '));
 }
 
 
@@ -179,7 +221,7 @@ sf::Vector2f TextField::getRealSize() {
 // ___________________________________________________________________________
 void TextField::draw(sf::RenderWindow &window) {
     for (auto& line: textLines_) {
-        window.draw(line);
+        line.draw(window);
     }
 }
 
@@ -212,8 +254,56 @@ void TextField::computeRenderInformation() {
 
 }
 
-std::vector<std::string> TextField::splitString(const std::string &str, char delimiter) {
-    return std::vector<std::string>();
+void TextField::setMultiLine(bool multiLine) {
+    if (multiLine_ != multiLine) {
+        multiLine_ = multiLine;
+
+        // Update render update flag
+        needRenderUpdate_ = true;
+    }
+}
+
+void TextField::setFontSize(int fontSize) {
+    if (fontSize_ != fontSize) {
+        fontSize_ = fontSize;
+
+        // Update render update flag
+        needRenderUpdate_ = true;
+    }
+}
+
+void TextField::setBold(bool bold) {
+    if (bold_ != bold) {
+        bold_ = bold;
+
+        // Update render update flag
+        needRenderUpdate_ = true;
+    }
+}
+
+void TextField::setAlignment(sw::Alignment alignment) {
+    if (alignment_ != alignment) {
+        alignment_ = alignment;
+
+        // Update render update flag
+        needRenderUpdate_ = true;
+    }
+}
+
+bool TextField::getMultiLine() const {
+    return multiLine_;
+}
+
+int TextField::getFontSize() const {
+    return fontSize_;
+}
+
+bool TextField::getBold() const {
+    return bold_;
+}
+
+sw::Alignment TextField::getAlignment() const {
+    return alignment_;
 }
 
 

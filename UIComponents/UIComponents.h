@@ -54,19 +54,20 @@ private:
  * and more basic.
  */
 class Text: public sw::UIComponent {
+public:
     // Constructor and destructor
     Text(std::string name, sf::Vector2f sizeProportions, std::string content);
-    ~Text() = default;
+    // ~Text() = default;
 
     // Modify the text appearance
     void setFontSize(int fontSize);
     void setBold(bool bold);
     void setContent(const std::string &content);
 
-    // Loops over all text lines and uses window.draw to render them to the screen
+    // Uses window.draw to render the text to the screen
     void draw(sf::RenderWindow& window) override;
 
-    // TextFields should probably not have to handle events.
+    // Handle events.
     bool handleEvent(const sf::Event& event) override;
 
     // Compute the render information for the sf::Text
@@ -125,7 +126,17 @@ public:
     // use setter functions?
     TextField(std::string name, sf::Vector2f sizeProportions, std::string content);
 
-      //, int fontSize, bool bold, sw::Alignment alignment, bool multiLine); → Set with setters
+    // Setter for text field modifications
+    void setMultiLine(bool multiLine);
+    void setFontSize(int fontSize);
+    void setBold(bool bold);
+    void setAlignment(sw::Alignment alignment);
+
+    // Getters for text field modifications
+    bool getMultiLine() const;
+    int getFontSize() const;
+    bool getBold() const;
+    sw::Alignment getAlignment() const;
 
     // Turns the content into textLines that fit into the maximum size. Should be called in the init. TextLines only
     // contain string information at this point. Also updates the fontSize if needed.
@@ -166,11 +177,11 @@ private:
     sw::Alignment alignment_;
 
     // Storing the - possibly multiple - lines of text
-    std::vector<sf::Text> textLines_;
+    std::vector<Text> textLines_;
     std::string content_;
 
     // Container to store and align the text lines
-    // sw::Container container_;
+    sw::Container container_;
 };
 
 

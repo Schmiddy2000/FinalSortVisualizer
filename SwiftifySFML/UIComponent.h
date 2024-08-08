@@ -10,9 +10,18 @@ namespace sw {
     class UIComponent {
     public:
         // Constructor and destructor
-        UIComponent(std::string name, const sf::Vector2f sizeProportions);
-
+        UIComponent(std::string name, sf::Vector2f sizeProportions);
         virtual ~UIComponent() = default;
+
+        // Delete copy constructor and copy assignment operator
+        UIComponent(const UIComponent&) = delete;
+        UIComponent& operator=(const UIComponent&) = delete;
+
+        // Move constructor
+        UIComponent(UIComponent&& other) noexcept;
+
+        // Move assignment operator
+        UIComponent& operator=(UIComponent&& other) noexcept;
 
         // Setter functions
 
@@ -62,6 +71,9 @@ namespace sw {
         virtual void computeRenderInformation() = 0;
 
     protected:
+        // Computet the size from the parentSize and sizeProportions
+        void computeSize();
+
         // Flag indicating if the render information needs to be updated. Only set internally.
         bool needRenderUpdate_;
 
