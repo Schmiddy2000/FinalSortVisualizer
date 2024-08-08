@@ -881,8 +881,9 @@ namespace sw {
         needRenderUpdate_ = false;
     }
 
-    bool Container::containsPosition(sf::Vector2f position) {
-        if (position.x > position_.x and position.x < position_.x + size_.x and position.y > position_.y and position.y < position_.y + size_.y) {
+    bool Container::containsPosition(sf::Vector2f position) const {
+        if (position.x > position_.x and position.x < position_.x + size_.x and
+            position.y > position_.y and position.y < position_.y + size_.y) {
             return true;
         }
 

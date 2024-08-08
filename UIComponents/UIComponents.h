@@ -6,6 +6,7 @@
 #define FINALSORTVISUALIZER_UICOMPONENTS_H
 
 #include <SFML/Graphics.hpp>
+#include "../SwiftifySFML/Container.h"
 #include "../SwiftifySFML/UIComponent.h"
 #include "../SwiftifySFML/Enumerations.h"
 
@@ -23,24 +24,67 @@ public:
     Button(std::string name, sf::Vector2f sizeProportions, std::string label);
 
     // Override the render method here. This should only draw to the screen
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window) override;
 
     // Here we still have to think about the return to signalize the higher-level view component that an action
     // has to be performed...
-    bool handleEvent(const sf::Event& event);
+    bool handleEvent(const sf::Event& event) override;
 
     // Write a get render instructions function here that computes the information needed to render the button in the
     // initializer and when any relevant parameters change. This should reduce the computational cost since the render
     // function will be called every frame
-    void computeRenderInformation();
+    void computeRenderInformation() override;
 
 private:
+    // Render update flag
+    bool needRenderUpdate_;
+
     // Store the label string
     std::string label_;
 
     // Add parameters to store the precomputed sf::RectangleShape and a sf::Text instances here
     sf::RectangleShape buttonShape_;
     sf::Text buttonLabel_;
+};
+
+
+/*
+ * Basic implementation that can display a one-lined string.
+ * Essentially the same as sf::Text but as a UIComponent
+ * and more basic.
+ */
+class Text: public sw::UIComponent {
+    // Constructor and destructor
+    Text(std::string name, sf::Vector2f sizeProportions, std::string content);
+    ~Text() = default;
+
+    // Modify the text appearance
+    void setFontSize(int fontSize);
+    void setBold(bool bold);
+    void setContent(const std::string &content);
+
+    // Loops over all text lines and uses window.draw to render them to the screen
+    void draw(sf::RenderWindow& window) override;
+
+    // TextFields should probably not have to handle events.
+    bool handleEvent(const sf::Event& event) override;
+
+    // Compute the render information for the sf::Text
+    void computeRenderInformation() override;
+
+private:
+    // Render update flag
+    bool needRenderUpdate_;
+
+    // Appearance modifications
+    int fontSize_;
+    bool bold_;
+
+    // Store the content
+    std::string content_;
+
+    // Store the render information
+    sf::Text text_;
 };
 
 
@@ -70,14 +114,18 @@ private:
  * getRenderInstructions should handle the recursive logic. This would make the code more modular and
  * easier to maintain.
  *
+ *
+ * --- This class could probably be rather easily improved using Containers ---
+ *
  */
 class TextField: public sw::UIComponent {
 public:
     // Constructor
     // Is the passing of content, fontsize, alignment, and multiLine needed? Or should it take default values and
     // use setter functions?
-    TextField(std::string name, const sf::Vector2f sizeProportions, sf::Vector2f position, sf::Vector2f size,
-              std::string content, int fontSize, bool bold, sw::Alignment alignment, bool multiLine);
+    TextField(std::string name, sf::Vector2f sizeProportions, std::string content);
+
+      //, int fontSize, bool bold, sw::Alignment alignment, bool multiLine); → Set with setters
 
     // Turns the content into textLines that fit into the maximum size. Should be called in the init. TextLines only
     // contain string information at this point. Also updates the fontSize if needed.
@@ -108,14 +156,21 @@ private:
     // Function to split a string by space characters to get a vector with words
     std::vector<std::string> splitString(const std::string &str, char delimiter);
 
+    // Render update flag
+    bool needRenderUpdate_;
 
-    // Storing the - possibly multiple - lines of text
-    std::vector<sf::Text> textLines_;
+    // Modification parameters
     bool multiLine_;
     int fontSize_;
     bool bold_;
     sw::Alignment alignment_;
+
+    // Storing the - possibly multiple - lines of text
+    std::vector<sf::Text> textLines_;
     std::string content_;
+
+    // Container to store and align the text lines
+    sw::Container container_;
 };
 
 
@@ -129,6 +184,8 @@ private:
 class Slider: public sw::UIComponent {
 public:
     // Constructor
+    Slider(std::string name, const sf::Vector2f sizeProportions, int minValue, int maxValue);
+    ~Slider() = default;
 
     // The min and max values will be passed to the slider for initiation. Therefore, we will very likely won't need
     // getters for those. They will be used in the handleEvent function internally since this determines the
@@ -144,11 +201,29 @@ public:
     void updateRenderInstructions();
 
 private:
+    // Render update flag
+    bool needRenderUpdate_;
+
     // Think about the types (not that important though). Either do static_casts or template this. No templating
     // needed, since diversity and size are ints, right?
-    unsigned int minValue_;
-    unsigned int maxValue_;
-    unsigned int currentValue_;
+    int minValue_;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    int maxValue_;
+    int currentValue_;
 
     // UI Subcomponents
     sf::RectangleShape sliderBar_;

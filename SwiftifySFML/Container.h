@@ -99,7 +99,7 @@ namespace sw {
         // --- Private functions ---
 
         // Check if a position is within the bounds of this container
-        bool containsPosition(sf::Vector2f position);
+        bool containsPosition(sf::Vector2f position) const;
 
         // Functions to compute the internal dimensions from the parent's dimensions and proportions
         void computeSize();

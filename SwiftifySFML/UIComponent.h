@@ -47,6 +47,9 @@ namespace sw {
         [[nodiscard]] const sf::Color &getForegroundColor() const;
         [[nodiscard]] const sf::Color &getBackgroundColor() const;
 
+        // Check if a given position in within the UIComponent's bounds
+        bool containsPosition(sf::Vector2f position) const;
+
         // UI-related functions
 
         // Draws the UI component to the screen according to the render information
