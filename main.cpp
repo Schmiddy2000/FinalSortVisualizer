@@ -10,6 +10,7 @@
 #include "Settings/Settings.h"
 #include "Screens/StartScreen.cpp"
 #include "UIComponents/UIComponents.h"
+#include "Sorter/Sorter.h"
 
 
 int main() {
@@ -31,28 +32,21 @@ int main() {
     myScreen->setBackground(sf::Color::Blue);
     myScreen->setLayoutOrientation(sw::LayoutOrientation::Vertical);
     myScreen->setSpacingProportions(sf::Vector2f(0, 0.05));
-    myScreen->setAlignment(sw::Alignment::Leading);
+    myScreen->setAlignment(sw::Alignment::Center);
     myScreen->setPaddingProportions(sf::Vector2f(0.05, 0.05));
 
     auto otherScreen = std::make_shared<sw::Screen>("SecondScreen", window);
 
-//    Button myButton("Button1", sf::Vector2f(0.5, 0.25), "Hello");
-//    myScreen->addUIComponent(std::make_unique<Button>(std::move(myButton)));
+    Button myButton("Button1", sf::Vector2f(0.5, 0.25), "Hello");
+    myScreen->addUIComponent(std::make_unique<Button>(std::move(myButton)));
 
 
     DatasetVisualizer dataVisualizer("dataVisualizer", sf::Vector2f(0.8, 0.6));
     std::vector<float> myVec = {0.6, 0.7, 0.8, 0.9, 0.3, 0.5, 0.6, 0.4, 0.6};
+
     dataVisualizer.setParentSize(static_cast<sf::Vector2f>(window.getSize()));
     dataVisualizer.setupUIElements(myVec);
     myScreen->addUIComponent(std::make_unique<DatasetVisualizer>(std::move(dataVisualizer)));
-
-//    Text myText("Text1", sf::Vector2f(0.1, 0.1), "Press me");
-//    myText.setForegroundColor(ColorSpace::buttonForeground);
-//    myScreen->addUIComponent(std::make_unique<Text>(std::move(myText)));
-
-//    sw::Container myContainer("Container1", sf::Vector2f(0.5, 0.5));
-//    myContainer.setBackground(sf::Color::Black);
-//    myScreen->addContainer(std::make_unique<sw::Container>(std::move(myContainer)));
 
     // Add the screen to the application
     myApp->addScreen(std::move(myScreen));

@@ -34,7 +34,7 @@ public:
     // step by step. Handles dataclass function calls internally. Returns the indices that were swapped.
     virtual std::pair<size_t, size_t> stepSort(bool useCopy) = 0;
 
-private:
+protected:
     // performanceSort() has no tracking components and just sorts the dataset with the class instances sorting
     // algorithm
     virtual void performanceSort(bool useCopy, bool accountForMemoryAllocation) = 0;
@@ -46,11 +46,33 @@ private:
     // Dataset instance
     Dataset<std::variant<int, float, double>> dataset_;
 
+    // Store a copy of the normalized data
+    std::vector<float> normalizedData_;
+
+
     // Operation trackers
     std::vector<int> comparisonTracker_;
     std::vector<int> copyTracker_;
     std::vector<int> moveTracker_;
+
+    // Keeps track of the steps taken in the current iteration
+    size_t stepIndex_;
+
+    // Keeps track of the iteration number that the sorter is currently in
+    int iterationIndex_;
 };
+
+
+class BubbleSorter: public Sorter {
+public:
+    // Constructor and destructor
+    template<class T>
+    explicit BubbleSorter(Dataset<T> dataset);
+
+    std::pair<size_t, size_t> stepSort(bool useCopy) override;
+
+};
+
 
 
 #endif //FINALSORTVISUALIZER_SORTER_H

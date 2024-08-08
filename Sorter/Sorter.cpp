@@ -17,6 +17,7 @@ Sorter::Sorter(Dataset<T> dataset) {
 template<class T>
 void Sorter::setDataset(Dataset<T> dataset) {
     dataset_ = dataset;
+    normalizedData_ = dataset.getNormalizedData();
 }
 
 std::vector<int> *Sorter::getComparisonTracker() {
@@ -60,4 +61,65 @@ double Sorter::benchmarkPerformance(u_int8_t repetitions, bool useCopy, bool acc
 }
 
 
+// --- BubbleSorter ---
+
+template<class T>
+BubbleSorter::BubbleSorter(Dataset<T> dataset) : Sorter(dataset) { }
+
+std::pair<size_t, size_t> BubbleSorter::stepSort(bool useCopy) {
+    // If sorted, return invalid indices. Make sure to check for these in the receiver functions
+    if (isSorted_) {
+        return std::pair(-1, -1);
+    }
+
+    // Bool to check if any pair was swapped
+    bool swapped = false;
+    std::pair<size_t, size_t> swappedIndices;
+
+    // Tracker variables
+    int compares = 0;
+    int copies = 0;
+    int moves = 0;
+
+    // Perform one step of bubble sorting. Is this necessary with the counter-resets?
+    if (stepIndex_ < normalizedData_.size() - 1) {
+        // Update compare tacker
+        compares += 1;
+
+        if (normalizedData_[stepIndex_] > normalizedData_[stepIndex_ + 1]) {
+            // Swap the two elements and set swapped to true
+            std::swap(normalizedData_[stepIndex_], normalizedData_[stepIndex_ + 1]);
+            swapped = true;
+
+            // Update copy / move tracker variables
+            copies += useCopy ? 3 : 1;
+            moves += useCopy ? 0 : 2;
+        }
+        // Increment the step index counter
+        stepIndex_++;
+
+        swappedIndices = std::pair<size_t, size_t>(stepIndex_ - 1, stepIndex_);
+
+        // If the last element has been reached, increment iterationIndex and reset stepIndex
+        if (stepIndex_ == normalizedData_.size()) {
+            iterationIndex_++;
+            stepIndex_ = iterationIndex_;
+        }
+    }
+
+    // Add the tracker results to the vectors
+    comparisonTracker_.push_back(compares);
+    copyTracker_.push_back(copies);
+    moveTracker_.push_back(moves);
+
+    // Check if the array is sorted
+    if (!swapped) {
+        isSorted_ = true;
+
+        // Return the sorted flags via indices
+        return std::pair(-1, -1);
+    }
+
+    return swappedIndices;
+}
 
