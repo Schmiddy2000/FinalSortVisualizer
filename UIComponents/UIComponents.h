@@ -10,6 +10,8 @@
 #include "../SwiftifySFML/UIComponent.h"
 #include "../SwiftifySFML/Enumerations.h"
 
+#include "../Datasets/Dataset.h"
+
 
 /*
  * Button class. Can be interacted with by mouse clicks.
@@ -278,7 +280,15 @@ class DatasetVisualizer: public sw::UIComponent {
 public:
     // Constructor. Should have a bool subsectionSelection determining if this feature should be displayed / enabled.
     DatasetVisualizer(std::string name, sf::Vector2f sizeProportions);
-    ~DatasetVisualizer() = default;
+    // ~DatasetVisualizer() override = default;
+
+    // Set up the UI elements that store the information to display the bars. This handles the population of the
+    // dataBars and their positioning.
+    template<class T>
+    void setupUIElements(const std::vector<T>& normalizedData);
+
+    // Update dataBars_ by switching the specified elements
+    void swapDataBars(size_t firstIndex, size_t secondIndex);
 
     // ...
     void draw(sf::RenderWindow& window) override;
@@ -286,21 +296,11 @@ public:
     void computeRenderInformation() override;
 
 private:
-    // Should either have a ref / pointer to the dataset instance and set the subsection indices itself, or the
-    // sort / shuffle functions should be extended to take indices as parameters and then be called...
-    // Since we need to manage first clicks where we can't know if it is the start or stop index, having these
-    // parameters here might be better...
-    // --> Have to update the parameters (and inner workings) of the sort and shuffle functions
-    size_t subsectionStart_;
-    size_t subsectionStop_;
+    // Vector to store the bars that need to be displayed
+    std::vector<sf::RectangleShape> dataBars_;
 
-    // Technically, we only need (a pointer to) the normalized data (plus maybe the section indices). But my gut
-    // tells me that we'll probably need more information at some point, so having access to a sorter instance
-    // (that will contain a dataset instance) is a better choice...
-    // Then we would have to use a templated variable though. For that, I would have to use std::variant. If I use
-    // variant, can or do I have to use unique pointers then? Because this might be a problem due to unique
-    // ownership...
-    // ...
+    // Vector containing the heights of the bars
+    std::vector<float> barHeights_;
 };
 
 

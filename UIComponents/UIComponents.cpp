@@ -385,3 +385,95 @@ void Slider::computeRenderInformation() {
 void Slider::updateRenderInstructions() {
 
 }
+
+DatasetVisualizer::DatasetVisualizer(std::string name, sf::Vector2f sizeProportions)
+: UIComponent(std::move(name), sizeProportions) {
+
+}
+
+template<class T>
+void DatasetVisualizer::setupUIElements(const std::vector<T> &normalizedData) {
+    // Compute the size to make the instantiation possible
+    computeSize();
+
+    // Compute the width for every bar. Should there be spacing in between the bars?
+    float barWidth = size_.x / normalizedData.size();
+
+    // Set the initial position and increment it by barWidth in the loop. With spacing, account for that as well
+    float currentXPosition = position_.x;
+
+    for (auto& data: normalizedData) {
+        float barHeight = size_.y * data;
+        sf::Vector2f barSize(barWidth, barHeight);
+
+        // Calculate the position. The x-component is already defined, but the y-component needs an offset.
+        float yPosition = position_.y + size_.y * (1 - data);
+        sf::Vector2f barPosition(currentXPosition, yPosition);
+
+        // Create the rectangleShapes
+        sf::RectangleShape bar;
+        bar.setPosition(barPosition);
+        bar.setSize(barSize);
+        bar.setFillColor(sf::Color::Cyan);
+
+        // Add the bar and height to the corresponding vectors
+        dataBars_.emplace_back(std::move(bar));
+        barHeights_.push_back(barHeight);
+
+        // Update the currentXPosition
+        currentXPosition += barWidth;
+    }
+}
+
+void DatasetVisualizer::swapDataBars(size_t firstIndex, size_t secondIndex) {
+    // Swap the positions of the elements at the first and second index
+    std::swap(barHeights_[firstIndex], barHeights_[secondIndex]);
+    std::swap(dataBars_[firstIndex], dataBars_[secondIndex]);
+}
+
+void DatasetVisualizer::draw(sf::RenderWindow &window) {
+    // Update render information if needed
+    if (needRenderUpdate_) {
+        computeRenderInformation();
+    }
+
+    for (const auto& bar: dataBars_) {
+        window.draw(bar);
+    }
+}
+
+bool DatasetVisualizer::handleEvent(const sf::Event &event) {
+    return false;
+}
+
+// The positions in x direction are all being set to 160. Y position seems unaffected
+void DatasetVisualizer::computeRenderInformation() {
+    // Compute the width for every bar. Should there be spacing in between the bars?
+    float barWidth = size_.x / barHeights_.size();
+    float maxBarHeight = *std::max_element(barHeights_.begin(), barHeights_.end());
+
+    // Set the initial position and increment it by barWidth in the loop. With spacing, account for that as well
+    float currentXPosition = position_.x;
+
+    // Loop through all data bars and update their size and positions
+    size_t indexCounter = 0;
+    for (auto &height: barHeights_) {
+        // Update the values in the barHeights vector
+        height = size_.y / maxBarHeight * height;
+
+        // Update the sizes and positions of the dataBars
+        dataBars_[indexCounter].setSize(sf::Vector2f(barWidth, height));
+        dataBars_[indexCounter].setPosition(currentXPosition, position_.y + size_.y * (1 - height / size_.y));
+
+        // Increment the indexCounter and the current xPosition
+        indexCounter++;
+        currentXPosition += barWidth;
+    }
+
+    needRenderUpdate_ = false;
+}
+
+// Explicit instantiation for the used types
+template void DatasetVisualizer::setupUIElements<int>(const std::vector<int>&);
+template void DatasetVisualizer::setupUIElements<float>(const std::vector<float>&);
+template void DatasetVisualizer::setupUIElements<double>(const std::vector<double>&);

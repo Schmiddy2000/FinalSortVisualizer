@@ -702,6 +702,10 @@ namespace sw {
         // Store the secondary base offset, from the perspective of the largest element inside the container.
         float secondaryBaseOffset = padding_.x;
 
+        if (elements_.empty()) {
+            return;
+        }
+
         // Get the position and size of the last element in the elements_ array
         sf::Vector2f lastElementPosition = std::visit([](auto &el) -> sf::Vector2f { return el->getPosition(); },
                                                       elements_.back());
