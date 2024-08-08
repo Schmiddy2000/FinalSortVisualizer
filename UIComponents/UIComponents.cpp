@@ -16,7 +16,6 @@ Button::Button(std::string name, sf::Vector2f sizeProportions, std::string label
     needRenderUpdate_ = true;
 }
 
-
 // ___________________________________________________________________________
 void Button::draw(sf::RenderWindow &window) {
     // Update render information if needed
@@ -27,7 +26,6 @@ void Button::draw(sf::RenderWindow &window) {
     window.draw(buttonShape_);
     window.draw(buttonLabel_);
 }
-
 
 // ___________________________________________________________________________
 bool Button::handleEvent(const sf::Event &event) {
@@ -51,7 +49,6 @@ bool Button::handleEvent(const sf::Event &event) {
     return hasBeenHandled;
 }
 
-
 // ___________________________________________________________________________
 // Maybe use the Text class here as well
 // ___________________________________________________________________________
@@ -72,6 +69,10 @@ void Button::computeRenderInformation() {
 
 
 // --- Text ---
+// This class should be resized to only take up the space that the actual text box takes up.
+// To do this:
+// - Calculate the new size proportions from the size of the localBounds
+// - Should the position also be updated accordingly?
 
 // ___________________________________________________________________________
 Text::Text(std::string name, sf::Vector2f sizeProportions, std::string content)
@@ -90,6 +91,8 @@ void Text::draw(sf::RenderWindow &window) {
     if (needRenderUpdate_) {
         computeRenderInformation();
     }
+
+    // std::cout << "Size_: " << size_.x << ", " << size_.y << std::endl;
 
     window.draw(text_);
 }
@@ -119,18 +122,23 @@ bool Text::handleEvent(const sf::Event &event) {
 // ___________________________________________________________________________
 void Text::computeRenderInformation() {
     // Set up the text properties
-    text_.setPosition(position_);
     text_.setCharacterSize(fontSize_);
-    std::string tester("Hallo...");
     text_.setString(content_);
     text_.setFillColor(ColorSpace::textForeground);
     text_.setFont(bold_ ? Settings::boldFont : Settings::font);
 
+    // Adjust the position and possibly the size
+    adjustPosition();
+    computeSize();
+
+    // The position should be updated afterward
+    text_.setPosition(position_);
 
     // Reset render update flag
     needRenderUpdate_ = false;
 }
 
+// ___________________________________________________________________________
 void Text::setFontSize(int fontSize) {
     fontSize_ = fontSize;
 
@@ -138,6 +146,7 @@ void Text::setFontSize(int fontSize) {
     needRenderUpdate_ = true;
 }
 
+// ___________________________________________________________________________
 void Text::setBold(bool bold) {
     bold_ = bold;
 
@@ -145,11 +154,46 @@ void Text::setBold(bool bold) {
     needRenderUpdate_ = true;
 }
 
+// ___________________________________________________________________________
 void Text::setContent(const std::string &content) {
     content_ = content;
 
     // Update render update flag
     needRenderUpdate_ = true;
+}
+
+//const sf::Vector2f &Text::getSize() const {
+//    sf::Vector2f realSize = text_.getLocalBounds().getSize();
+//
+//    return realSize;
+//}
+
+// ___________________________________________________________________________
+void Text::adjustSize() {
+    size_ = text_.getLocalBounds().getSize();
+}
+
+// ___________________________________________________________________________
+void Text::adjustPosition() {
+
+    // position_ = position_ - sf::Vector2f((parentSize_.x * sizeProportions_.x - size_.x) / 2, (parentSize_.y * sizeProportions_.y - size_.y) / 2);
+
+//    // Check if the position needs to be updated
+//
+//    // Calculate the theoretically specified size
+//    sf::Vector2f theoreticalSize(sizeProportions_.x * parentSize_.x, sizeProportions_.y * parentSize_.y);
+//
+//    // Calculate the buffer
+//    sf::Vector2f actualSize = text_.getLocalBounds().getSize();
+//    sf::Vector2f buffer((theoreticalSize.x - actualSize.x) / 2, (theoreticalSize.y - actualSize.y) / 2);
+//
+//    // Update the position
+//    position_ += buffer;
+}
+
+// ___________________________________________________________________________
+void Text::computeSize() {
+    size_ = text_.getLocalBounds().getSize();
 }
 
 
@@ -169,6 +213,7 @@ TextField::TextField(std::string name, sf::Vector2f sizeProportions, std::string
     needRenderUpdate_ = true;
 }
 
+// ___________________________________________________________________________
 std::vector<std::string> TextField::splitString(const std::string &string, char delimiter) {
     // Create the vector to store the words
     std::vector<std::string> words;
@@ -211,12 +256,10 @@ float TextField::contentToTextLines() {
     std::vector<std::string> splitContent = std::move(splitString(content_, ' '));
 }
 
-
 // ___________________________________________________________________________
 sf::Vector2f TextField::getRealSize() {
     return sf::Vector2f();
 }
-
 
 // ___________________________________________________________________________
 void TextField::draw(sf::RenderWindow &window) {
@@ -224,7 +267,6 @@ void TextField::draw(sf::RenderWindow &window) {
         line.draw(window);
     }
 }
-
 
 // ___________________________________________________________________________
 bool TextField::handleEvent(const sf::Event &event) {
@@ -248,12 +290,12 @@ bool TextField::handleEvent(const sf::Event &event) {
     return hasBeenHandled;
 }
 
-
 // ___________________________________________________________________________
 void TextField::computeRenderInformation() {
 
 }
 
+// ___________________________________________________________________________
 void TextField::setMultiLine(bool multiLine) {
     if (multiLine_ != multiLine) {
         multiLine_ = multiLine;
@@ -263,6 +305,7 @@ void TextField::setMultiLine(bool multiLine) {
     }
 }
 
+// ___________________________________________________________________________
 void TextField::setFontSize(int fontSize) {
     if (fontSize_ != fontSize) {
         fontSize_ = fontSize;
@@ -272,6 +315,7 @@ void TextField::setFontSize(int fontSize) {
     }
 }
 
+// ___________________________________________________________________________
 void TextField::setBold(bool bold) {
     if (bold_ != bold) {
         bold_ = bold;
@@ -281,6 +325,7 @@ void TextField::setBold(bool bold) {
     }
 }
 
+// ___________________________________________________________________________
 void TextField::setAlignment(sw::Alignment alignment) {
     if (alignment_ != alignment) {
         alignment_ = alignment;
@@ -290,18 +335,22 @@ void TextField::setAlignment(sw::Alignment alignment) {
     }
 }
 
+// ___________________________________________________________________________
 bool TextField::getMultiLine() const {
     return multiLine_;
 }
 
+// ___________________________________________________________________________
 int TextField::getFontSize() const {
     return fontSize_;
 }
 
+// ___________________________________________________________________________
 bool TextField::getBold() const {
     return bold_;
 }
 
+// ___________________________________________________________________________
 sw::Alignment TextField::getAlignment() const {
     return alignment_;
 }
@@ -309,6 +358,7 @@ sw::Alignment TextField::getAlignment() const {
 
 // --- Slider ---
 
+// ___________________________________________________________________________
 Slider::Slider(std::string name, const sf::Vector2f sizeProportions, int minValue, int maxValue)
 : UIComponent(std::move(name), sizeProportions) {
     minValue_ = minValue;
@@ -321,18 +371,15 @@ void Slider::draw(sf::RenderWindow &window) {
 
 }
 
-
 // ___________________________________________________________________________
 bool Slider::handleEvent(const sf::Event &event) {
 
 }
 
-
 // ___________________________________________________________________________
 void Slider::computeRenderInformation() {
 
 }
-
 
 // ___________________________________________________________________________
 void Slider::updateRenderInstructions() {

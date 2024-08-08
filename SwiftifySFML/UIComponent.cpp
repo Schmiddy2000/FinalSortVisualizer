@@ -169,7 +169,7 @@ namespace sw {
         size_.x = sizeProportions_.x * parentSize_.x;
         size_.y = sizeProportions_.y * parentSize_.y;
 
-        std::cout << "Did compute size:" << size_.x << ", " << size_.y << std::endl;
+        // std::cout << "Did compute size:" << size_.x << ", " << size_.y << std::endl;
 
 //        // Update the parentSize of all child elements
 //        for (auto &element: elements_) {

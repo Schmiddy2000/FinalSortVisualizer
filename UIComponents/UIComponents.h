@@ -64,6 +64,11 @@ public:
     void setBold(bool bold);
     void setContent(const std::string &content);
 
+    // void setPosition
+
+    // Override the getter function for size to get the real size (bounds of the text box)
+    // const sf::Vector2f & getSize() const override;
+
     // Uses window.draw to render the text to the screen
     void draw(sf::RenderWindow& window) override;
 
@@ -73,7 +78,15 @@ public:
     // Compute the render information for the sf::Text
     void computeRenderInformation() override;
 
+    // Set size to localBounds and position to parents position?
+
 private:
+    // Functions to update size and position to represent the localBounds of the text box
+    void adjustSize();
+    void adjustPosition();
+
+    void computeSize() override;
+
     // Render update flag
     bool needRenderUpdate_;
 

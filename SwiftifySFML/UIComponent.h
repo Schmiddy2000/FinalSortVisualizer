@@ -52,7 +52,7 @@ namespace sw {
         // Get internal properties, only as const references
         [[nodiscard]] const std::string &getName() const;
         [[nodiscard]] const sf::Vector2f &getPosition() const;
-        [[nodiscard]] const sf::Vector2f &getSize() const;
+        [[nodiscard]] virtual const sf::Vector2f &getSize() const;
         [[nodiscard]] const sf::Color &getForegroundColor() const;
         [[nodiscard]] const sf::Color &getBackgroundColor() const;
 
@@ -72,7 +72,7 @@ namespace sw {
 
     protected:
         // Computet the size from the parentSize and sizeProportions
-        void computeSize();
+        virtual void computeSize();
 
         // Flag indicating if the render information needs to be updated. Only set internally.
         bool needRenderUpdate_;
