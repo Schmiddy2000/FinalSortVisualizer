@@ -59,7 +59,7 @@ double Sorter::benchmarkPerformance(u_int8_t repetitions, bool useCopy, bool acc
         runTimes.push_back(duration.count());
     }
 
-    double averageTime = std::accumulate(runTimes.begin(), runTimes.end(), 0.0) / runTimes.size();
+    double averageTime = std::accumulate(runTimes.begin(), runTimes.end(), 0.0) / static_cast<double>(runTimes.size());
     return averageTime;
 }
 

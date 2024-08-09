@@ -18,9 +18,12 @@ public:
 
     // Set the dataset
     void setDataset(size_t size, u_int8_t diversity);
+
+    // Get a reference to the vector with the sorter instances
+    std::vector<std::unique_ptr<Sorter>>& getSorters();
 private:
     // Vector storing the different sorter instances
-    std::vector<Sorter> sorters_;
+    std::vector<std::unique_ptr<Sorter>> sorters_;
 
     // Variant that can store the templated datasets
     Dataset dataset_;

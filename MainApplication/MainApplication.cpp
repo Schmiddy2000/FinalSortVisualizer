@@ -17,12 +17,16 @@ MainApplication::MainApplication(sf::RenderWindow& window) : sw::Application(win
 void MainApplication::createSorters(const std::vector<std::string>& sorterNameList) {
     for (const auto& sorterName: sorterNameList) {
         if (sorterName == "Bubble sort") {
-            // BubbleSorter bubbleSorter(dataset_<T>);
+            sorters_.emplace_back(std::make_unique<BubbleSorter>(dataset_));
         }
     }
 }
 
 void MainApplication::setDataset(size_t size, u_int8_t diversity) {
+    dataset_ = Dataset(size, diversity);
+}
 
+std::vector<std::unique_ptr<Sorter>> &MainApplication::getSorters() {
+    return sorters_;
 }
 

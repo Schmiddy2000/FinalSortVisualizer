@@ -30,6 +30,7 @@ add_executable(FinalSortVisualizer
         MainApplication/MainApplication.cpp
         MainApplication/MainApplication.h
         MainApplication/MainApplication.cpp
+        Screens/StartScreen.h
 )
 
 target_link_libraries(FinalSortVisualizer sfml-system sfml-window sfml-graphics)

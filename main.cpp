@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "Settings/Settings.h"
-#include "Screens/StartScreen.cpp"
+#include "Screens/StartScreen.h"
 #include "UIComponents/UIComponents.h"
 #include "Sorter/Sorter.h"
 #include "MainApplication/MainApplication.h"
