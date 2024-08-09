@@ -18,14 +18,14 @@ namespace sw {
  * Abstract Application class. Handles high-level functionalities and interactions such as screen transitions and
  * running the main loop. It can be subclassed and extended with additional functionalities.
  */
-    class Application : public std::enable_shared_from_this<Application> {
+    class Application {//: public std::enable_shared_from_this<Application> {
     public:
         // Constructor and destructor
         explicit Application(sf::RenderWindow &window);
 
         virtual ~Application() = default;
 
-        std::shared_ptr <Application> getPtr();
+        // std::shared_ptr <Application> getPtr();
 
         // Run the main loop of the application
         virtual void run();

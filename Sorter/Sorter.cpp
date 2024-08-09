@@ -72,6 +72,9 @@ std::pair<size_t, size_t> BubbleSorter::stepSort(bool useCopy) {
         return std::pair(-1, -1);
     }
 
+    // Increment the step counter
+    stepCounter_++;
+
     // Bool to check if any pair was swapped
     bool swapped = false;
     std::pair<size_t, size_t> swappedIndices;
@@ -121,5 +124,9 @@ std::pair<size_t, size_t> BubbleSorter::stepSort(bool useCopy) {
     }
 
     return swappedIndices;
+}
+
+void BubbleSorter::performanceSort(bool useCopy, bool accountForMemoryAllocation) {
+
 }
 

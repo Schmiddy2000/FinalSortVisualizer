@@ -129,7 +129,7 @@ void Text::computeRenderInformation() {
 
     // Adjust the position and possibly the size
     computeSize();
-    adjustPosition();
+    // adjustPosition();
 
     // The position should be updated afterward
     text_.setPosition(position_);
@@ -199,6 +199,8 @@ void Text::adjustPosition() {
 // ___________________________________________________________________________
 void Text::computeSize() {
     size_ = text_.getLocalBounds().getSize();
+
+    adjustPosition();
 }
 
 

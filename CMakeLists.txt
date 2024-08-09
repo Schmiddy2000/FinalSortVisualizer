@@ -27,8 +27,9 @@ add_executable(FinalSortVisualizer
         UIComponents/UIComponents.cpp
         Sorter/Sorter.h
         Sorter/Sorter.cpp
-        # MainApplication/MainApplication.cpp
-        # MainApplication/MainApplication.h
+        MainApplication/MainApplication.cpp
+        MainApplication/MainApplication.h
+        MainApplication/MainApplication.cpp
 )
 
 target_link_libraries(FinalSortVisualizer sfml-system sfml-window sfml-graphics)

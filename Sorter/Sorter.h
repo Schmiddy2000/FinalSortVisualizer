@@ -12,7 +12,7 @@ public:
     // Constructor and destructor
     template<class T>
     explicit Sorter(Dataset<T> dataset);
-    ~Sorter() = default;
+    virtual ~Sorter() = default;
 
     // Set the copy to a dataset instance
     template<class T>
@@ -68,6 +68,8 @@ public:
     // Constructor and destructor
     template<class T>
     explicit BubbleSorter(Dataset<T> dataset);
+
+    void performanceSort(bool useCopy, bool accountForMemoryAllocation) override;
 
     std::pair<size_t, size_t> stepSort(bool useCopy) override;
 

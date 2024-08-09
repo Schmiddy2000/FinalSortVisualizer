@@ -17,9 +17,9 @@ namespace sw {
         screens_.reserve(10);
     }
 
-    std::shared_ptr<Application> Application::getPtr() {
-        return shared_from_this();
-    }
+//    std::shared_ptr<Application> Application::getPtr() {
+//        return shared_from_this();
+//    }
 
     void Application::run() {
         // Raise a warning if no screen has been set as the start screen.
@@ -67,7 +67,7 @@ namespace sw {
         } else {
 
             // Set the shared application pointer and add the screen to the list of screens
-            screen->setApplication(getPtr());
+            // screen->setApplication(getPtr());
             screens_.emplace_back(std::move(screen));
 
             // Set the first added screen as the start screen as a default
