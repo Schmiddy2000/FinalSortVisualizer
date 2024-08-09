@@ -61,7 +61,7 @@ namespace sw {
 
     void Screen::addContainer(std::unique_ptr<Container> container) {
         // Add parent size information to the container
-        container->setParentSize(static_cast<sf::Vector2f> (window_.getSize()));
+        // container->setParentSize(static_cast<sf::Vector2f> (window_.getSize()));
 
         // Add the container
         rootContainer_.addContainer(std::move(container));
@@ -69,7 +69,7 @@ namespace sw {
 
     void Screen::addUIComponent(std::unique_ptr<UIComponent> component) {
         // Add parent size information to the UIComponent
-        component->setParentSize(static_cast<sf::Vector2f> (window_.getSize()));
+        // component->setParentSize(static_cast<sf::Vector2f> (window_.getSize()));
 
         // Add the UIComponent
         rootContainer_.addUIComponent(std::move(component));
@@ -85,6 +85,14 @@ namespace sw {
 
     const std::string &Screen::getName() {
         return name_;
+    }
+
+    UIComponent &Screen::getUIComponent(const std::string &name) {
+        return rootContainer_.getUIComponent(name);
+    }
+
+    Container &Screen::getContainer(const std::string &name) {
+        return rootContainer_.getContainer(name);
     }
 
 }

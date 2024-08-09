@@ -128,8 +128,8 @@ void Text::computeRenderInformation() {
     text_.setFont(bold_ ? Settings::boldFont : Settings::font);
 
     // Adjust the position and possibly the size
-    adjustPosition();
     computeSize();
+    adjustPosition();
 
     // The position should be updated afterward
     text_.setPosition(position_);
@@ -175,6 +175,11 @@ void Text::adjustSize() {
 
 // ___________________________________________________________________________
 void Text::adjustPosition() {
+    // Get the size of the text box
+    sf::FloatRect labelBounds = text_.getLocalBounds();
+
+    position_.x -= size_.x / 2;
+    position_.y -= (size_.y + labelBounds.height) / 2;
 
     // position_ = position_ - sf::Vector2f((parentSize_.x * sizeProportions_.x - size_.x) / 2, (parentSize_.y * sizeProportions_.y - size_.y) / 2);
 

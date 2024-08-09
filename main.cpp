@@ -1,16 +1,19 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-
-//#include "../SwiftifySFML/Container.h"
-//#include "../SwiftifySFML/Application.h"
-//#include "../SwiftifySFML/Screen.h"
-//#include "../SwiftifySFML/Enumerations.h"
 
 #include "Settings/Settings.h"
 #include "Screens/StartScreen.cpp"
 #include "UIComponents/UIComponents.h"
 #include "Sorter/Sorter.h"
+
+/*
+ * Observations:
+ * - Alignment seems to pretty much work, except for the fact that the text box size doesn't seem to be
+ * taken into account.
+ * - The position where the center of the text should be rather seems to be the top-left corner.
+ * - The small text offset also seems to need to be taken into account as it might not be included in
+ * the local bounds.
+ */
 
 
 int main() {
@@ -31,22 +34,23 @@ int main() {
     auto myScreen = std::make_shared<StartScreen>("StartScreen", window);
     myScreen->setBackground(sf::Color::Blue);
     myScreen->setLayoutOrientation(sw::LayoutOrientation::Vertical);
-    myScreen->setSpacingProportions(sf::Vector2f(0, 0.05));
+    myScreen->setSpacingProportions(sf::Vector2f(0.05, 0.05));
     myScreen->setAlignment(sw::Alignment::Center);
-    myScreen->setPaddingProportions(sf::Vector2f(0.05, 0.05));
+    // myScreen->setPaddingProportions(sf::Vector2f(0.05, 0.05));
 
     auto otherScreen = std::make_shared<sw::Screen>("SecondScreen", window);
 
-    Button myButton("Button1", sf::Vector2f(0.5, 0.25), "Hello");
-    myScreen->addUIComponent(std::make_unique<Button>(std::move(myButton)));
+    // Create a container to see the offset more easily
+    sw::Container myContainer("Container1", sf::Vector2f(0.25, 0.25));
+    myContainer.setBackground(sf::Color::Black);
+    myScreen->addContainer(std::make_unique<sw::Container>(std::move(myContainer)));
 
-
-    DatasetVisualizer dataVisualizer("dataVisualizer", sf::Vector2f(0.8, 0.6));
-    std::vector<float> myVec = {0.6, 0.7, 0.8, 0.9, 0.3, 0.5, 0.6, 0.4, 0.6};
-
-    dataVisualizer.setParentSize(static_cast<sf::Vector2f>(window.getSize()));
-    dataVisualizer.setupUIElements(myVec);
-    myScreen->addUIComponent(std::make_unique<DatasetVisualizer>(std::move(dataVisualizer)));
+    // Create and add a Text element
+    Text myText("Text1", sf::Vector2f(0.25, 0.25), "Hallo");
+    Text myText2("Text2", sf::Vector2f(0.25, 0.25), "Hallo");
+    myScreen->addUIComponent(std::make_unique<Text>(std::move(myText)));
+    myScreen->addUIComponent(std::make_unique<Text>(std::move(myText2)));
+    myScreen->addContainer(std::make_unique<sw::Container>(std::move(myContainer)));
 
     // Add the screen to the application
     myApp->addScreen(std::move(myScreen));
@@ -58,110 +62,13 @@ int main() {
 }
 
 
-
-//int main() {
-//    Settings settings;
+//    DatasetVisualizer dataVisualizer("dataVisualizer", sf::Vector2f(0.8, 0.6));
+//    std::vector<float> myVec = {0.6, 0.7, 0.8, 0.9, 0.3, 0.5, 0.6, 0.4, 0.6};
 //
-//    // Set the pointer to this MainApplication instance in the Settings
-//    // Settings::setAppPointer(this);
+//    dataVisualizer.setParentSize(static_cast<sf::Vector2f>(window.getSize()));
+//    dataVisualizer.setupUIElements(myVec);
+//    myScreen->addUIComponent(std::make_unique<DatasetVisualizer>(std::move(dataVisualizer)));
 //
-//    // Initialize the font to make it accessible throughout the project
-//    Settings::loadFont(Fonts::SourceCodeProLight);
-//    Settings::loadBoldFont(Fonts::SourceCodeProBold);
-//
-//    // Set the dark mode boolean to initialize the colorspace
-//    Settings::setDarkMode(true);
-//
-//    sf::RenderWindow window(sf::VideoMode(800, 600), "UI Demo");
-//    window.setFramerateLimit(10);
-//
-//    auto myApp = std::make_shared<sw::Application>(window);
-//
-//    auto myScreen = std::make_shared<StartScreen>("StartScreen", window);
-//    myScreen->setBackground(sf::Color::Blue);
-//    myScreen->setLayoutOrientation(sw::LayoutOrientation::Vertical);
-//    myScreen->setSpacingProportions(sf::Vector2f(0, 0.05));
-//
-//    auto otherScreen = std::make_shared<sw::Screen>("SecondScreen", window);
-//
-//    sw::Container myContainer("Container1", sf::Vector2f(0.2, 0.2));
-//    myContainer.setBackground(ColorSpace::buttonBackground);
-//    myContainer.setAlignment(sw::Alignment::BottomTrailing);
-//
-//    Text myText("Text1", sf::Vector2f(1, 1), "Press me");
-//    myText.setForegroundColor(ColorSpace::buttonForeground);
-//    myContainer.addUIComponent(std::make_unique<Text>(std::move(myText)));
-//
-//    // Capture myScreen using a shared_ptr in the lambda
-//    myContainer.setCallback([myScreen]() {
-//        std::cout << "Setting function" << std::endl;
-//        myScreen->transitionToSecondScreen();
-//    });
-//
-//    sw::Container mySecondContainer("Container2", sf::Vector2f(0.35, 0.2));
-//    mySecondContainer.setBackground(sf::Color::Green);
-//
-//    Button myButton("myButton", sf::Vector2f(0.3, 0.1), "Hey man");
-//    myButton.setForegroundColor(sf::Color::Black);
-//    myButton.setBackgroundColor(sf::Color::Magenta);
-//
-//    myScreen->addContainer(std::make_unique<sw::Container>(std::move(myContainer)));
-//    myScreen->addContainer(std::make_unique<sw::Container>(std::move(mySecondContainer)));
+//    Button myButton("Button1", sf::Vector2f(0.25, 0.1), "Click to sort");
+//    myButton.setBackgroundColor(sf::Color::White);
 //    myScreen->addUIComponent(std::make_unique<Button>(std::move(myButton)));
-//
-////    sw::Container buttonContainer("MyButton", sf::Vector2f(0.4, 0.2));
-////    buttonContainer.setBackground(sf::Color::Red);
-//
-//    // Add the screen to the application
-//    myApp->addScreen(std::move(myScreen));
-//    myApp->addScreen(std::move(otherScreen));
-//
-//    myApp->run();
-//
-//    return 0;
-//}
-
-//int main() {
-//    sf::RenderWindow window(sf::VideoMode(800, 600), "UI Demo");
-//    // Set the frame rate limit to x FPS
-//    window.setFramerateLimit(10);
-//
-//    // Ensure that the Application is created as a shared_ptr
-//    auto myApp = std::make_shared<sw::Application>(window);
-//
-//    // Create a screen and set a background color
-//    StartScreen myScreen("StartScreen", window);
-//    myScreen.setBackground(sf::Color::Blue);
-//
-//    sw::Screen otherScreen("SecondScreen", window);
-//
-//    // Create and add a container
-//    sw::Container myContainer("Container1", sf::Vector2f(0.5, 0.5));
-//    myContainer.setBackground(sf::Color::Magenta);
-//
-//    // Set the callback using a lambda function
-//    myContainer.setCallback([&myScreen]() {
-//        std::cout << "Setting function" << std::endl;
-//        myScreen.transitionToSecondScreen();
-//    });
-//
-//    myScreen.addContainer(std::make_unique<sw::Container>(std::move(myContainer)));
-//
-//    sw::Container buttonContainer("MyButton", sf::Vector2f(0.4, 0.2));
-//    buttonContainer.setBackground(sf::Color::Red);
-//
-////    // Add the screen to the application
-////    myApp->addScreen(std::make_unique<sw::Screen>(std::move(myScreen)));
-////    myApp->addScreen(std::make_unique<sw::Screen>(std::move(otherScreen)));
-//
-//// Add the screen to the application
-//    // Make sure to add myScreen by reference to avoid invalidating the lambda capture
-//    auto screenPtr = std::make_unique<sw::Screen>(std::move(myScreen));
-//    myApp->addScreen(std::move(screenPtr));
-//    myApp->addScreen(std::make_unique<sw::Screen>(std::move(otherScreen)));
-//
-//    // Run the application
-//    myApp->run();
-//
-//    return 0;
-//}

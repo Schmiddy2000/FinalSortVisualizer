@@ -68,6 +68,9 @@ namespace sw {
 
         // --- Getter functions ---
 
+        UIComponent& getUIComponent(const std::string& name);
+        Container& getContainer(const std::string& name);
+
         const std::string &getName();
 
     protected:
