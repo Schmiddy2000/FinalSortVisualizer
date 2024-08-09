@@ -8,14 +8,17 @@
 
 #include <numeric>
 
-template<class T>
-Sorter::Sorter(Dataset<T> dataset) {
+// Here the move shouldn't affect the initial dataset. Only the instance passed to the constructor should be 
+// copied from there
+Sorter::Sorter(Dataset dataset) : dataset_(std::move(dataset)) {
     stepCounter_ = 0;
+    stepIndex_ = 0;
+    iterationIndex_ = 0;
     isSorted_ = false;
+    
 }
 
-template<class T>
-void Sorter::setDataset(Dataset<T> dataset) {
+void Sorter::setDataset(Dataset dataset) {
     dataset_ = dataset;
     normalizedData_ = dataset.getNormalizedData();
 }
@@ -63,8 +66,7 @@ double Sorter::benchmarkPerformance(u_int8_t repetitions, bool useCopy, bool acc
 
 // --- BubbleSorter ---
 
-template<class T>
-BubbleSorter::BubbleSorter(Dataset<T> dataset) : Sorter(dataset) { }
+BubbleSorter::BubbleSorter(Dataset dataset) : Sorter(std::move(dataset)) { }
 
 std::pair<size_t, size_t> BubbleSorter::stepSort(bool useCopy) {
     // If sorted, return invalid indices. Make sure to check for these in the receiver functions

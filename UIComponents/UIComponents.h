@@ -284,8 +284,7 @@ public:
 
     // Set up the UI elements that store the information to display the bars. This handles the population of the
     // dataBars and their positioning.
-    template<class T>
-    void setupUIElements(const std::vector<T>& normalizedData);
+    void setupUIElements(const std::vector<float>& normalizedData);
 
     // Update dataBars_ by switching the specified elements
     void swapDataBars(size_t firstIndex, size_t secondIndex);

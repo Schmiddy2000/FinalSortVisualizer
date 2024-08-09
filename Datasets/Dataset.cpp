@@ -10,8 +10,7 @@
 #include <iostream>
 
 // ___________________________________________________________________________
-template<typename T>
-Dataset<T>::Dataset(size_t size, u_int8_t diversity) {
+Dataset::Dataset(size_t size, u_int8_t diversity) {
     size_ = size;
     diversity_ = diversity;
 
@@ -20,114 +19,161 @@ Dataset<T>::Dataset(size_t size, u_int8_t diversity) {
     subsectionStop_ = size - 1;
 }
 
+// Copy Constructor
+Dataset::Dataset(const Dataset& other)
+        : size_(other.size_),
+          diversity_(other.diversity_),
+          data_(other.data_),
+          normalizedData_(other.normalizedData_),
+          subsectionStart_(other.subsectionStart_),
+          subsectionStop_(other.subsectionStop_) {
+    // Additional deep copy logic necessary?
+}
+
+// Copy Assignment Operator
+Dataset& Dataset::operator=(const Dataset& other) {
+    // Handle self-assignment
+    if (this == &other) {
+        return *this;
+    }
+
+    // Copy the data members
+    size_ = other.size_;
+    diversity_ = other.diversity_;
+    data_ = other.data_;
+    normalizedData_ = other.normalizedData_;
+    subsectionStart_ = other.subsectionStart_;
+    subsectionStop_ = other.subsectionStop_;
+
+    return *this;
+}
+
+// Move Constructor
+Dataset::Dataset(Dataset&& other) noexcept
+        : size_(other.size_),
+          diversity_(other.diversity_),
+          data_(std::move(other.data_)),
+          normalizedData_(std::move(other.normalizedData_)),
+          subsectionStart_(other.subsectionStart_),
+          subsectionStop_(other.subsectionStop_) {
+
+    // Leave 'other' object in a valid state
+    other.size_ = 0;
+    other.diversity_ = 0;
+    other.subsectionStart_ = 0;
+    other.subsectionStop_ = 0;
+}
+
+// Move Assignment Operator
+Dataset& Dataset::operator=(Dataset&& other) noexcept {
+    // Handle self-assignment
+    if (this == &other) {
+        return *this;
+    }
+
+    // Transfer ownership from 'other' to 'this'
+    size_ = other.size_;
+    diversity_ = other.diversity_;
+    data_ = std::move(other.data_);
+    normalizedData_ = std::move(other.normalizedData_);
+    subsectionStart_ = other.subsectionStart_;
+    subsectionStop_ = other.subsectionStop_;
+
+    // Leave 'other' object in a valid state
+    other.size_ = 0;
+    other.diversity_ = 0;
+    other.subsectionStart_ = 0;
+    other.subsectionStop_ = 0;
+
+    return *this;
+}
+
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::normalizeDataset() {
+void Dataset::normalizeDataset() {
     // Find the maximum value as a reference for normalization
-    T maxVal = *std::max_element(data_.begin(), data_.end());
+    int maxVal = *std::max_element(data_.begin(), data_.end());
 
     // Loop over all data points and normalize them
     for (size_t i = 0; i < size_; ++i) {
-        normalizedData_[i] = static_cast<float>(data_[i]) / maxVal;
+        normalizedData_[i] = static_cast<float>(data_[i]) / static_cast<float>(maxVal);
     }
 }
 
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::createDataset() {
+void Dataset::createDataset() {
 
     // Create a source of randomness
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    // Generate random values between 1 and diversity for every element in the range of size_. Also check for types
-    if constexpr (std::is_same<T, int>::value) {
-        // Instantiate integer distribution
-        std::uniform_int_distribution<> dis(1, diversity_);
+    // Instantiate integer distribution
+    std::uniform_int_distribution<> dis(1, diversity_);
 
-        for (size_t i = 0; i < size_; ++i) {
-            data_[i] = dis(gen);
-        }
-    } else {
-        // Instantiate real distribution
-        std::uniform_real_distribution<T> dis(1.0, static_cast<T>(diversity_));
-
-        for (size_t i = 0; i < size_; ++i) {
-            data_[i] = dis(gen);
-        }
+    // Generate random values between 1 and diversity for every element in the range of size_.
+    for (size_t i = 0; i < size_; ++i) {
+        data_[i] = dis(gen);
     }
 }
 
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::setSize(size_t size) {
+void Dataset::setSize(size_t size) {
     size_ = size;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::setDiversity(u_int8_t diversity) {
+void Dataset::setDiversity(u_int8_t diversity) {
     diversity_ = diversity;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::setSubsectionStart(size_t subsectionStart) {
+void Dataset::setSubsectionStart(size_t subsectionStart) {
     subsectionStart_ = subsectionStart;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::setSubsectionStop(size_t subsectionStop) {
+void Dataset::setSubsectionStop(size_t subsectionStop) {
     subsectionStop_ = subsectionStop;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-size_t Dataset<T>::getSize() {
+size_t Dataset::getSize() const {
     return data_.size();
 }
 
 // ___________________________________________________________________________
-template<typename T>
-u_int8_t Dataset<T>::getDiversity() {
+u_int8_t Dataset::getDiversity() const {
     return diversity_;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-size_t Dataset<T>::getSubsectionStart() {
+size_t Dataset::getSubsectionStart() {
     return subsectionStart_;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-size_t Dataset<T>::getSubsectionStop() {
+size_t Dataset::getSubsectionStop() {
     return subsectionStop_;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-std::vector<float> Dataset<T>::getNormalizedData() {
+std::vector<float> Dataset::getNormalizedData() {
     return normalizedData_;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-std::vector<T> Dataset<T>::getData() {
+std::vector<int> Dataset::getData() {
     return data_;
 }
 
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::sortSubsection(bool reverse) {
+void Dataset::sortSubsection(bool reverse) {
     // Defined the iterators for the sorting function
     auto startIt = data_.begin() + subsectionStart_;
     auto stopIt = data_.end() + subsectionStop_;
 
     // Sort the dataset in reverse order. Optionally only subsections
     if (reverse) {
-        std::sort(startIt, stopIt, std::greater<T>());
+        std::sort(startIt, stopIt, std::greater<>());
     } else {
         // Sort the dataset. Optionally only subsections
         std::sort(startIt, stopIt);
@@ -138,8 +184,7 @@ void Dataset<T>::sortSubsection(bool reverse) {
 }
 
 // ___________________________________________________________________________
-template<typename T>
-void Dataset<T>::shuffleSubsection() {
+void Dataset::shuffleSubsection() {
     // Create a source of randomness
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -151,24 +196,16 @@ void Dataset<T>::shuffleSubsection() {
     normalizeDataset();
 }
 
-template<typename T>
-void Dataset<T>::updateData(std::pair<size_t, size_t> indices) {
+void Dataset::updateData(std::pair<size_t, size_t> indices) {
     // Swap two elements in the data array to reduce computational cost
-    T swapper = indices.first;
+    int swapper = data_[indices.first];
     data_[indices.first] = data_[indices.second];
     data_[indices.second] = swapper;
 }
 
-template<typename T>
-void Dataset<T>::updateNormalizedData(std::pair<size_t, size_t> indices) {
+void Dataset::updateNormalizedData(std::pair<size_t, size_t> indices) {
     // Swap two elements in the normalized data array to reduce computational cost
-    T swapper = indices.first;
+    float swapper = normalizedData_[indices.first];
     normalizedData_[indices.first] = normalizedData_[indices.second];
     normalizedData_[indices.second] = swapper;
 }
-
-
-// Explicit instantiations of the Dataset template for the currently supported types
-template class Dataset<int>;
-template class Dataset<float>;
-template class Dataset<double>;

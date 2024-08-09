@@ -5,7 +5,7 @@
  #include "../Settings/Settings.h"
 #include "MainApplication.h"
 
-MainApplication::MainApplication(sf::RenderWindow& window) : sw::Application(window) {
+MainApplication::MainApplication(sf::RenderWindow& window) : sw::Application(window), dataset_(100, 16) {
     // Initialize the font to make it accessible throughout the project
     Settings::loadFont(Fonts::SourceCodeProLight);
     Settings::loadBoldFont(Fonts::SourceCodeProBold);
@@ -14,7 +14,6 @@ MainApplication::MainApplication(sf::RenderWindow& window) : sw::Application(win
     Settings::setDarkMode(true);
 }
 
-template <class T>
 void MainApplication::createSorters(const std::vector<std::string>& sorterNameList) {
     for (const auto& sorterName: sorterNameList) {
         if (sorterName == "Bubble sort") {
@@ -23,8 +22,7 @@ void MainApplication::createSorters(const std::vector<std::string>& sorterNameLi
     }
 }
 
-template<class T>
-void MainApplication::setDataset(Dataset<T>) {
+void MainApplication::setDataset(size_t size, u_int8_t diversity) {
 
 }
 

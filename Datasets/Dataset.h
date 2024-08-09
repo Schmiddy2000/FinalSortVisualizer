@@ -29,8 +29,10 @@
  * Additional thoughts:
  * - Should data_ rather be a vector? Would work better for visualizations, but what are the drawbacks?
  * - Add safeguards against renormalization
+ *
+ *
+ * --- Implement copy semantics ---
  */
-template <typename T>
 class Dataset {
 public:
     // Constructor and destructor
@@ -38,12 +40,12 @@ public:
     ~Dataset() = default;
 
     // Copy constructor and assignment operator
-    Dataset(const Dataset<T>& other);
-    Dataset<T>& operator=(const Dataset<T>& other);
+    Dataset(const Dataset& other);
+    Dataset& operator=(const Dataset& other);
 
     // Move constructor and assignment operator. Likely not needed
-    Dataset<T>(Dataset<T>&& other) noexcept;
-    Dataset<T>& operator=(Dataset<T>&& other) noexcept;
+    Dataset(Dataset&& other) noexcept;
+    Dataset& operator=(Dataset&& other) noexcept;
 
     // Normalize the dataset so it can be visualized
     void normalizeDataset();
@@ -58,8 +60,8 @@ public:
     void setSubsectionStart(size_t subsectionStart);
     void setSubsectionStop(size_t subsectionStop);
 
-    size_t getSize();
-    u_int8_t getDiversity();
+    size_t getSize() const;
+    [[nodiscard]] u_int8_t getDiversity() const;
 
     // The following two getters are very likely not needed... Or they might be. Depends on the subsection selection
     // animation...
@@ -68,7 +70,7 @@ public:
 
     // Returns a copy of the data / normalized data. Used when giving the initial data to multiple sorter instances
     std::vector<float> getNormalizedData();
-    std::vector<T> getData();
+    std::vector<int> getData();
 
     // Takes the indices swapped in the stepSort function of a Sorter instance. Then swaps these two indices in the
     // normalized data to avoid computing everything again.
@@ -87,7 +89,7 @@ private:
     u_int8_t diversity_;
 
     // The actual data
-    std::vector<T> data_;
+    std::vector<int> data_;
 
     // Field containing the normalized data, so we don't have to compute it every time for the visualization.
     // Should this be a float or double? (with u_int8_t (and even 16) float precision should be sufficient, I guess)

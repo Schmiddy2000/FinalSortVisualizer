@@ -398,8 +398,7 @@ DatasetVisualizer::DatasetVisualizer(std::string name, sf::Vector2f sizeProporti
 
 }
 
-template<class T>
-void DatasetVisualizer::setupUIElements(const std::vector<T> &normalizedData) {
+void DatasetVisualizer::setupUIElements(const std::vector<float>& normalizedData) {
     // Compute the size to make the instantiation possible
     computeSize();
 
@@ -479,8 +478,3 @@ void DatasetVisualizer::computeRenderInformation() {
 
     needRenderUpdate_ = false;
 }
-
-// Explicit instantiation for the used types
-template void DatasetVisualizer::setupUIElements<int>(const std::vector<int>&);
-template void DatasetVisualizer::setupUIElements<float>(const std::vector<float>&);
-template void DatasetVisualizer::setupUIElements<double>(const std::vector<double>&);

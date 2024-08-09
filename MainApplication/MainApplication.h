@@ -14,18 +14,16 @@ public:
     explicit MainApplication(sf::RenderWindow& window);
 
     // Create the sorter instances
-    template<class T>
     void createSorters(const std::vector<std::string>& sorterNameList);
 
     // Set the dataset
-    template <class T>
-    void setDataset(Dataset<T>);
+    void setDataset(size_t size, u_int8_t diversity);
 private:
     // Vector storing the different sorter instances
     std::vector<Sorter> sorters_;
 
     // Variant that can store the templated datasets
-    // std::variant<Dataset<int>, Dataset<float>, Dataset<double>> dataset_;
+    Dataset dataset_;
 
 };
 

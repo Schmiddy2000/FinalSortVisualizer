@@ -10,13 +10,11 @@
 class Sorter {
 public:
     // Constructor and destructor
-    template<class T>
-    explicit Sorter(Dataset<T> dataset);
+    explicit Sorter(Dataset dataset);
     virtual ~Sorter() = default;
 
     // Set the copy to a dataset instance
-    template<class T>
-    void setDataset(Dataset<T> dataset);
+    void setDataset(Dataset dataset);
 
     // Getters for operation trackers
     std::vector<int>* getComparisonTracker();
@@ -24,8 +22,8 @@ public:
     std::vector<int>* getMoveTracker();
 
     // Get iteration information
-    unsigned int getStepCount() const;
-    bool isSorted() const;
+    [[nodiscard]] unsigned int getStepCount() const;
+    [[nodiscard]] bool isSorted() const;
 
     // Function that can benchmark the sorting time
     double benchmarkPerformance(u_int8_t repetitions, bool useCopy, bool accountForMemoryAllocation);
@@ -44,7 +42,7 @@ protected:
     bool isSorted_;
 
     // Dataset instance
-    Dataset<std::variant<int, float, double>> dataset_;
+    Dataset dataset_;
 
     // Store a copy of the normalized data
     std::vector<float> normalizedData_;
@@ -66,8 +64,7 @@ protected:
 class BubbleSorter: public Sorter {
 public:
     // Constructor and destructor
-    template<class T>
-    explicit BubbleSorter(Dataset<T> dataset);
+    explicit BubbleSorter(Dataset dataset);
 
     void performanceSort(bool useCopy, bool accountForMemoryAllocation) override;
 
