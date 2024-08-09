@@ -29,7 +29,7 @@ sf::Color ColorSpace::screenBackground;
 
 
 // Settings
-std::shared_ptr<sw::Application> Settings::appPointer = nullptr;
+std::shared_ptr<MainApplication> Settings::appPointer = nullptr;
 std::pair<int, int> Settings::windowSize = std::pair(1080, 640);
 // Define here and set value in the MainApplication constructor
 bool Settings::darkMode;

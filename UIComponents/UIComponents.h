@@ -282,6 +282,12 @@ public:
     DatasetVisualizer(std::string name, sf::Vector2f sizeProportions);
     // ~DatasetVisualizer() override = default;
 
+    // Move Constructor
+    DatasetVisualizer(DatasetVisualizer&& other) noexcept;
+
+    // Move Assignment Operator
+    DatasetVisualizer& operator=(DatasetVisualizer&& other) noexcept;
+
     // Set up the UI elements that store the information to display the bars. This handles the population of the
     // dataBars and their positioning.
     void setupUIElements(const std::vector<float>& normalizedData);

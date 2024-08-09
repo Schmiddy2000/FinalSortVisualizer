@@ -10,6 +10,7 @@
 
 #include "../SwiftifySFML/Screen.h"
 #include "../SwiftifySFML/Application.h"
+#include "../UIComponents/UIComponents.h"
 
 class StartScreen: public sw::Screen {
 public:
@@ -25,8 +26,12 @@ public:
     // Do one sorting step
     void stepSort();
 
-private:
+    // Callback function for the button to execute one sorting step
+    void stepSortCallback();
 
+private:
+    // Dataset visualizer instance that can be handled by this screen class instance
+    DatasetVisualizer datasetVisualizer_;
 };
 
 #endif //FINALSORTVISUALIZER_STARTSCREEN_H

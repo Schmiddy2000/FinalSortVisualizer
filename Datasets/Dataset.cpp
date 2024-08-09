@@ -17,6 +17,10 @@ Dataset::Dataset(size_t size, u_int8_t diversity) {
     // Set the start and stop indices to the first and last elements to handle immediate sorting requests
     subsectionStart_ = 0;
     subsectionStop_ = size - 1;
+
+    // Set up the date
+    createDataset();
+    normalizeDataset();
 }
 
 // Copy Constructor
@@ -95,7 +99,7 @@ void Dataset::normalizeDataset() {
 
     // Loop over all data points and normalize them
     for (size_t i = 0; i < size_; ++i) {
-        normalizedData_[i] = static_cast<float>(data_[i]) / static_cast<float>(maxVal);
+        normalizedData_.push_back(static_cast<float>(data_[i]) / static_cast<float>(maxVal));
     }
 }
 
@@ -111,7 +115,7 @@ void Dataset::createDataset() {
 
     // Generate random values between 1 and diversity for every element in the range of size_.
     for (size_t i = 0; i < size_; ++i) {
-        data_[i] = dis(gen);
+        data_.push_back(dis(gen));
     }
 }
 

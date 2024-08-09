@@ -9,8 +9,6 @@
 #include <vector>
 #include "Screen.h"
 
-// Forward declaration of the screen class
-// class Screen;
 
 namespace sw {
 
@@ -18,7 +16,7 @@ namespace sw {
  * Abstract Application class. Handles high-level functionalities and interactions such as screen transitions and
  * running the main loop. It can be subclassed and extended with additional functionalities.
  */
-    class Application {//: public std::enable_shared_from_this<Application> {
+    class Application {
     public:
         // Constructor and destructor
         explicit Application(sf::RenderWindow &window);

@@ -394,8 +394,22 @@ void Slider::updateRenderInstructions() {
 }
 
 DatasetVisualizer::DatasetVisualizer(std::string name, sf::Vector2f sizeProportions)
-: UIComponent(std::move(name), sizeProportions) {
+: UIComponent(std::move(name), sizeProportions) { }
 
+// Move Constructor
+DatasetVisualizer::DatasetVisualizer(DatasetVisualizer&& other) noexcept
+        : UIComponent(std::move(other)),
+          dataBars_(std::move(other.dataBars_)),
+          barHeights_(std::move(other.barHeights_)) {}
+
+// Move Assignment Operator
+DatasetVisualizer& DatasetVisualizer::operator=(DatasetVisualizer&& other) noexcept {
+    if (this != &other) {
+        UIComponent::operator=(std::move(other));
+        dataBars_ = std::move(other.dataBars_);
+        barHeights_ = std::move(other.barHeights_);
+    }
+    return *this;
 }
 
 void DatasetVisualizer::setupUIElements(const std::vector<float>& normalizedData) {

@@ -19,6 +19,9 @@ public:
     // Set the dataset
     void setDataset(size_t size, u_int8_t diversity);
 
+    // Get a reference to the dataset
+    Dataset& getDataset();
+
     // Get a reference to the vector with the sorter instances
     std::vector<std::unique_ptr<Sorter>>& getSorters();
 private:

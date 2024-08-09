@@ -5,15 +5,14 @@
 #ifndef FINALSORTVISUALIZER_SETTINGS_H
 #define FINALSORTVISUALIZER_SETTINGS_H
 
-//#include "../MainApplication/MainApplication.cpp"
 #include "../SwiftifySFML/Enumerations.h"
-#include "../SwiftifySFML/Application.h"
 
 #include <SFML/Graphics.hpp>
 #include <utility>
 #include <iostream>
 #include <memory>
 
+class MainApplication;
 
 /*
  * FontSize class. Contains predefined and descriptive values for font sizes.
@@ -118,10 +117,10 @@ public:
 class Settings {
 public:
     // Pointer to the MainApplication instance running the program.
-    static std::shared_ptr<sw::Application> appPointer;
+    static std::shared_ptr<MainApplication> appPointer;
 
     // Set the appPointer. Called in the constructor of MainApplication using *this.
-    static void setAppPointer(std::shared_ptr<sw::Application> appPtr) { appPointer = std::move(appPtr); }
+    static void setAppPointer(std::shared_ptr<MainApplication> appPtr) { appPointer = std::move(appPtr); }
 
     // Store screen dimensions.
     static std::pair<int, int> windowSize;

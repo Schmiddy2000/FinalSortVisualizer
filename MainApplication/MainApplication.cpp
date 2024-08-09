@@ -30,3 +30,7 @@ std::vector<std::unique_ptr<Sorter>> &MainApplication::getSorters() {
     return sorters_;
 }
 
+Dataset &MainApplication::getDataset() {
+    return dataset_;
+}
+
