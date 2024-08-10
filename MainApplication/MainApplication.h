@@ -14,7 +14,7 @@ public:
     explicit MainApplication(sf::RenderWindow& window);
 
     // Create the sorter instances
-    void createSorters(const std::vector<std::string>& sorterNameList);
+    void createSorters(const std::vector<std::string> sorterNameList);
 
     // Set the dataset
     void setDataset(size_t size, u_int8_t diversity);

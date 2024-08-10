@@ -66,12 +66,14 @@ double Sorter::benchmarkPerformance(u_int8_t repetitions, bool useCopy, bool acc
 
 // --- BubbleSorter ---
 
-BubbleSorter::BubbleSorter(Dataset dataset) : Sorter(std::move(dataset)) { }
+BubbleSorter::BubbleSorter(Dataset dataset) : Sorter(std::move(dataset)) {
+    normalizedData_ = dataset_.getNormalizedData();
+}
 
 std::pair<size_t, size_t> BubbleSorter::stepSort(bool useCopy) {
     // If sorted, return invalid indices. Make sure to check for these in the receiver functions
     if (isSorted_) {
-        return std::pair(-1, -1);
+        return std::pair(0, 0);
     }
 
     // Increment the step counter
@@ -117,13 +119,13 @@ std::pair<size_t, size_t> BubbleSorter::stepSort(bool useCopy) {
     copyTracker_.push_back(copies);
     moveTracker_.push_back(moves);
 
-    // Check if the array is sorted
-    if (!swapped) {
-        isSorted_ = true;
-
-        // Return the sorted flags via indices
-        return std::pair(-1, -1);
-    }
+//    // Check if the array is sorted
+//    if (!swapped) {
+//        isSorted_ = true;
+//
+//        // Return the sorted flags via indices
+//        return std::pair(0, 0);
+//    }
 
     return swappedIndices;
 }

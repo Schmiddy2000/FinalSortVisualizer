@@ -16,10 +16,9 @@ StartScreen::StartScreen(std::string name, sf::RenderWindow& window)
     app_ = Settings::appPointer;
 
     // Set up the dataset visualizer
+    datasetVisualizer_.setParentSize(static_cast<sf::Vector2f>(window.getSize()));
     datasetVisualizer_.setupUIElements(Settings::appPointer->getDataset().getNormalizedData());
     initializeScreen();
-
-    int i = 0;
 }
 
 void StartScreen::transitionToSecondScreen() {
@@ -38,17 +37,44 @@ void StartScreen::initializeScreen() {
     setSpacingProportions(sf::Vector2f(0.1, 0.1));
 
     addUIComponent(std::make_unique<DatasetVisualizer>(std::move(datasetVisualizer_)));
+
+    Button stepSortButton("StepSortButton", sf::Vector2f(0.3, 0.1), "Sort one step");
+    stepSortButton.setBackgroundColor(sf::Color::Blue);
+    stepSortButton.setCallback([this]() {
+        this->stepSortCallback();
+    });
+
+    Button selectDatasetButton("selectDatasetButton", sf::Vector2f(0.3, 0.1), "Select dataset");
+    selectDatasetButton.setBackgroundColor(sf::Color::Blue);
+    selectDatasetButton.setCallback([]() {
+        Settings::appPointer->createSorters(std::vector<std::string>{std::string("Bubble sort")});
+    });
+
+    addUIComponent(std::make_unique<Button>(std::move(stepSortButton)));
+    addUIComponent(std::make_unique<Button>(std::move(selectDatasetButton)));
 }
 
+
+// The issue is that in this function, the vectors of DatasetVisualizer that store the rectangles and heights are empty.
 void StartScreen::stepSort() {
     if (Settings::appPointer) {
         // Get a reference to the vector of sorter instances
         auto& sorters = Settings::appPointer->getSorters();
 
+        std::cout << "Got sorters" << std::endl;
+
         // For each sorter, call its sort method if it's dataset isn't already sorted
         for (auto& sorter: sorters) {
             if (!sorter->isSorted()) {
-                sorter->stepSort(false);
+                // Get the indices that should be swapped
+                auto swapIndices = sorter->stepSort(false);
+
+                std::cout << "Indices:" << swapIndices.first << ", " << swapIndices.second << std::endl;
+
+                // Update the related components
+                if (swapIndices != std::pair<size_t, size_t>(0, 0)) {
+                    datasetVisualizer_.swapDataBars(swapIndices.first, swapIndices.second);
+                }
             }
         }
     }
@@ -57,5 +83,6 @@ void StartScreen::stepSort() {
 void StartScreen::stepSortCallback() {
     // This is kind of dumb, but probably needed since the functions are being moved when set as a callback.
     // Since they only take up 24 bytes, this should be changed.
+    std::cout << "did swap" << std::endl;
     stepSort();
 }

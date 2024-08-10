@@ -449,6 +449,8 @@ void DatasetVisualizer::swapDataBars(size_t firstIndex, size_t secondIndex) {
     // Swap the positions of the elements at the first and second index
     std::swap(barHeights_[firstIndex], barHeights_[secondIndex]);
     std::swap(dataBars_[firstIndex], dataBars_[secondIndex]);
+
+
 }
 
 void DatasetVisualizer::draw(sf::RenderWindow &window) {
