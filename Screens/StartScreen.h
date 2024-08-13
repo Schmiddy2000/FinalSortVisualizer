@@ -31,7 +31,9 @@ public:
 
 private:
     // Dataset visualizer instance that can be handled by this screen class instance
-    DatasetVisualizer datasetVisualizer_;
+    //DatasetVisualizer datasetVisualizer_;
+
+    // Rather add a dataset here
 };
 
 #endif //FINALSORTVISUALIZER_STARTSCREEN_H
